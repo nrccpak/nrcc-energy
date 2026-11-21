@@ -727,10 +727,11 @@ function trValue(row, k) {
 async function trendsView() {
   $('#title').textContent = 'Trends';
   app.innerHTML = topNav('trends') + '<div class="card">Loading…</div>';
-  const months = await q(sb.from('month').select('month_key').order('month_key'));
+  const months = await q(sb.from('month').select('month_key,status').order('month_key'));
   const keys = months.map(m => m.month_key);
+  const lastDone = [...months].reverse().find(m => m.status !== 'draft')?.month_key || keys[keys.length - 1];
   let saved = {}; try { saved = JSON.parse(localStorage.getItem('nrcc_trend_presets') || '{}'); } catch (e) { }
-  const def = { ind: ['Summary!C38', 'Summary!J37'], from: keys[0], to: keys[keys.length - 1], type: 'line' };
+  const def = { ind: ['Summary!C38', 'Summary!J37'], from: keys[0], to: lastDone, type: 'line' };
   const c = Object.assign({}, def, trCfgFromHash());
   ['avg', 'roll', 'stack', 'ref100', 'table', 'labels', 'zero'].forEach(k => c[k] = c[k] === '1' || c[k] === true);
   if (!trCfgFromHash().ind) c.table = true;
@@ -775,8 +776,8 @@ async function trendsView() {
   ['tFrom', 'tTo', 'tType', 'oAvg', 'oRoll', 'oStack', 'oRef', 'oZero', 'oLab', 'oTab'].forEach(id => $('#' + id).onchange = draw);
   $('#indSearch').oninput = e => { const s = e.target.value.toLowerCase(); app.querySelectorAll('#picker label').forEach(l => l.style.display = l.dataset.s.includes(s) ? '' : 'none'); };
   $('#tQuick').onchange = e => { const v = e.target.value; if (!v) return; const last = keys[keys.length - 1];
-    if (v === 'all') { $('#tFrom').value = keys[0]; $('#tTo').value = last; } else if (v === 'base') { $('#tFrom').value = '2025-07'; $('#tTo').value = '2026-06'; }
-    else { $('#tFrom').value = keys[Math.max(0, keys.length - Number(v))]; $('#tTo').value = last; } e.target.value = ''; draw(); };
+    if (v === 'all') { $('#tFrom').value = keys[0]; $('#tTo').value = lastDone; } else if (v === 'base') { $('#tFrom').value = '2025-07'; $('#tTo').value = '2026-06'; }
+    else { const i = keys.indexOf(lastDone); $('#tFrom').value = keys[Math.max(0, i + 1 - Number(v))]; $('#tTo').value = lastDone; } e.target.value = ''; draw(); };
   $('#preset').onchange = e => { const v = e.target.value; if (!v) return; const p = v.startsWith('my:') ? saved[v.slice(3)] : Object.assign({ from: $('#tFrom').value, to: $('#tTo').value, type: 'line', table: true }, PRESETS[v]); apply(p); e.target.value = ''; };
   $('#saveView').onclick = () => { const n = prompt('Name for this view'); if (!n) return; saved[n] = read(); localStorage.setItem('nrcc_trend_presets', JSON.stringify(saved)); toast(`Saved "${n}" — find it under Presets`); };
   $('#trPng').onclick = () => { if (!TR.chart) return; const a = document.createElement('a'); a.href = TR.chart.toBase64Image('image/png', 1); a.download = 'NRCC energy trend.png'; a.click(); };
