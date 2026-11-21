@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NRCC Energy</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--ink:#1d2330;--mute:#667085;--line:#e4e7ec;--brand:#0f5132;--brand2:#157347;--stop:#b42318;--stopbg:#fef3f2;--warn:#b54708;--warnbg:#fffaeb;--ok:#067647;--okbg:#ecfdf3;--info:#175cd3;--infobg:#eff8ff}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--brand);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header h1{font-size:16px;margin:0;flex:1}
+header button{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:5px 10px;font-size:13px}
+main{max-width:980px;margin:0 auto;padding:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px}
+h2{font-size:17px;margin:0 0 10px} h3{font-size:14px;margin:16px 0 6px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+.muted{color:var(--mute);font-size:13px}
+button.primary{background:var(--brand2);color:#fff;border:0;border-radius:8px;padding:10px 14px;font-size:15px}
+button.sec{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:14px}
+button:disabled{opacity:.5}
+input,select,textarea{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;width:100%;background:#fff}
+input.num{text-align:right;font-variant-numeric:tabular-nums}
+label{display:block;font-size:13px;color:var(--mute);margin:8px 0 4px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.tabs button{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:14px}
+.tabs button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.row{display:grid;grid-template-columns:1.4fr 1fr 1fr .9fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.row .code{font-weight:600} .row .name{font-size:12px;color:var(--mute)}
+.row .k{text-align:right;font-variant-numeric:tabular-nums;font-size:14px}
+.row.head{font-size:12px;color:var(--mute);border-bottom:2px solid var(--line)}
+.neg{color:var(--stop);font-weight:600}
+.saved{outline:2px solid #a6f4c5} .err{outline:2px solid #fda29b}
+.pill{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600}
+.p-draft{background:#f2f4f7;color:#344054}.p-checked{background:var(--infobg);color:var(--info)}.p-final{background:var(--okbg);color:var(--ok)}
+.sev{border-radius:8px;padding:9px 11px;margin:6px 0;font-size:14px}
+.STOP{background:var(--stopbg);color:var(--stop)} .WARNING{background:var(--warnbg);color:var(--warn)} .INFO{background:var(--infobg);color:var(--info)}
+table.months{width:100%;border-collapse:collapse} table.months td,table.months th{padding:9px 6px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+table.months th{font-size:12px;color:var(--mute)} table.months tr{cursor:pointer} table.months td.n{text-align:right;font-variant-numeric:tabular-nums}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#1d2330;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;z-index:9;max-width:92vw}
+.lock{background:#f2f4f7;border-radius:8px;padding:8px 10px;font-size:13px;color:#344054;margin-bottom:10px}
+@media (max-width:640px){
+  .row{grid-template-columns:1fr 1fr;row-gap:6px}
+  .row .who{grid-column:1/3}
+  .row.head{display:none}
+  .row .lab{display:block;font-size:11px;color:var(--mute)}
+  .grid2{grid-template-columns:1fr}
+  table.months .hide-s{display:none}
+}
+@media (min-width:641px){.row .lab{display:none}}
+</style>
+</head>
+<body>
+<header><h1 id="title">NRCC Energy</h1><button id="homeBtn" hidden>Months</button><button id="outBtn" hidden>Sign out</button></header>
+<main id="app"><div class="card">Loading…</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPA_URL = 'https://tlxljdgkimbcilvhoeji.supabase.co';
+const SUPA_KEY = 'sb_publishable_ZlFm2ADrcnUO0BKDq6qCiA_L0L-Wn8v';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY, { db: { schema: 'energy' } });
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const fmt = (v, d = 0) => v === null || v === undefined || v === '' || isNaN(v) ? '—' : Number(v).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const parseNum = s => { if (s === null || s === undefined) return null; s = String(s).replace(/,/g, '').trim(); if (s === '') return null; const n = Number(s); return isNaN(n) ? NaN : n; };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const monthLabel = k => { const [y, m] = k.split('-'); return new Date(+y, +m - 1, 1).toLocaleString('en-GB', { month: 'short', year: 'numeric' }); };
+function toast(msg, ms = 2600) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms); }
+async function q(p) { const { data, error } = await p; if (error) { toast(error.message, 5000); throw error; } return data; }
+
+let state = { user: null, role: null, month: null, tab: 'pp' };
+
+// ---------------- auth ----------------
+async function boot() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return loginView();
+  state.user = session.user;
+  const me = await sb.from('app_user').select('full_name,role').eq('user_id', session.user.id).maybeSingle();
+  if (!me.data) { app.innerHTML = `<div class="card"><h2>No access</h2><p>This login (${esc(session.user.email)}) is not set up for the energy system.</p><button class="sec" onclick="signOut()">Sign out</button></div>`; return; }
+  state.role = me.data.role;
+  $('#outBtn').hidden = false; $('#homeBtn').hidden = false;
+  route();
+}
+function loginView() {
+  $('#outBtn').hidden = true; $('#homeBtn').hidden = true;
+  app.innerHTML = `<div class="card" style="max-width:420px;margin:30px auto">
+    <h2>Sign in</h2><p class="muted">NRCC Energy Management — Electrical Department</p>
+    <label>Email</label><input id="em" type="email" autocomplete="username">
+    <label>Password</label><input id="pw" type="password" autocomplete="current-password">
+    <div class="actions"><button class="primary" id="go">Sign in</button></div></div>`;
+  $('#go').onclick = async () => {
+    const { error } = await sb.auth.signInWithPassword({ email: $('#em').value.trim(), password: $('#pw').value });
+    if (error) return toast(error.message, 5000);
+    boot();
+  };
+  $('#pw').onkeydown = e => { if (e.key === 'Enter') $('#go').click(); };
+}
+async function signOut() { await sb.auth.signOut(); location.hash = ''; loginView(); }
+$('#outBtn').onclick = signOut;
+$('#homeBtn').onclick = () => { location.hash = ''; };
+window.onhashchange = () => state.user && route();
+
+function route() {
+  const h = location.hash.replace('#', '');
+  const m = h.match(/^m\/(\d{4}-\d{2})(?:\/(\w+))?$/);
+  if (m) { state.month = m[1]; state.tab = m[2] || 'pp'; return monthView(); }
+  homeView();
+}
+
+// ---------------- home ----------------
+async function homeView() {
+  $('#title').textContent = 'NRCC Energy';
+  app.innerHTML = '<div class="card">Loading…</div>';
+  const months = await q(sb.from('month').select('month_key,status,is_history').order('month_key', { ascending: false }));
+  const keys = months.map(m => m.month_key);
+  const res = await q(sb.from('result').select('month_key,indicator,value,status').in('indicator', ['Summary!C38', 'Summary!J37']).in('month_key', keys));
+  const chk = await q(sb.from('check_result').select('month_key,severity').in('severity', ['STOP', 'WARNING']).in('month_key', keys));
+  const kpi = {}; res.forEach(r => (kpi[r.month_key] ??= {})[r.indicator] = r);
+  const cnt = {}; chk.forEach(c => { (cnt[c.month_key] ??= { STOP: 0, WARNING: 0 })[c.severity]++; });
+  const last = keys[0];
+  const next = last ? (() => { const [y, m] = last.split('-').map(Number); const d = new Date(y, m, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; })() : null;
+  const canOpen = ['admin', 'entry'].includes(state.role) && months[0]?.status === 'final';
+  app.innerHTML = `
+  <div class="card"><h2>Months</h2>
+    ${canOpen ? `<div class="actions" style="margin:0 0 10px"><button class="primary" id="openNext">Start ${monthLabel(next)}</button></div>` :
+      (months[0] && months[0].status !== 'final' ? `<p class="muted">Finish ${monthLabel(last)} before starting the next month.</p>` : '')}
+    <table class="months"><thead><tr><th>Month</th><th>Status</th><th class="n">Gray kWh/t</th><th class="n">White kWh/t</th><th class="hide-s">Checks</th></tr></thead><tbody>
+    ${months.map(m => { const g = kpi[m.month_key]?.['Summary!C38'], w = kpi[m.month_key]?.['Summary!J37'], c = cnt[m.month_key];
+      return `<tr data-m="${m.month_key}"><td>${monthLabel(m.month_key)}${m.is_history ? ' <span class="muted">· history</span>' : ''}</td>
+      <td><span class="pill p-${m.status}">${m.status}</span></td>
+      <td class="n">${g?.value != null ? fmt(g.value, 1) + (g.status === 'estimated' ? '*' : '') : '—'}</td>
+      <td class="n">${w?.value != null ? fmt(w.value, 1) + (w.status === 'estimated' ? '*' : '') : '—'}</td>
+      <td class="hide-s">${c ? `${c.STOP ? `<span class="pill STOP">${c.STOP} STOP</span> ` : ''}${c.WARNING ? `<span class="pill WARNING">${c.WARNING} warn</span>` : ''}` : '<span class="muted">—</span>'}</td></tr>`; }).join('')}
+    </tbody></table>
+    <p class="muted">* estimated — kiln stopped, cement ground from stock clinker (decision 51).</p></div>`;
+  app.querySelectorAll('tr[data-m]').forEach(tr => tr.onclick = () => location.hash = `m/${tr.dataset.m}/pp`);
+  const b = $('#openNext'); if (b) b.onclick = async () => { await q(sb.schema('energy').rpc('open_month', { p_month: next })); toast(`${monthLabel(next)} started — opening readings carried forward`); location.hash = `m/${next}/pp`; };
+}
+
+// ---------------- month ----------------
+let cache = {};
+async function loadMonth(mk) {
+  const [month, meters, readings, items, prod, events, ppx, prevR] = await Promise.all([
+    q(sb.from('month').select('*').eq('month_key', mk).single()),
+    q(sb.from('meter').select('*').eq('active', true).order('entry_order')),
+    q(sb.from('reading').select('*').eq('month_key', mk)),
+    q(sb.from('production_item').select('*').eq('active', true).order('entry_order')),
+    q(sb.from('production').select('*').eq('month_key', mk)),
+    q(sb.from('meter_event').select('*').eq('month_key', mk).order('id')),
+    q(sb.from('pp_crosscheck').select('*').eq('month_key', mk).maybeSingle()),
+    q(sb.from('reading').select('meter_code,closing,kwh_doc').eq('month_key', prevMonth(mk)))
+  ]);
+  cache = { month, meters, items, events, ppx,
+    rd: Object.fromEntries(readings.map(r => [r.meter_code, r])),
+    pr: Object.fromEntries(prod.map(p => [p.item_code, p])),
+    prev: Object.fromEntries(prevR.map(r => [r.meter_code, r])) };
+}
+function prevMonth(mk) { const [y, m] = mk.split('-').map(Number); const d = new Date(y, m - 2, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; }
+const editable = () => cache.month.status !== 'final' && ['admin', 'entry'].includes(state.role);
+
+async function monthView() {
+  $('#title').textContent = monthLabel(state.month);
+  app.innerHTML = '<div class="card">Loading…</div>';
+  await loadMonth(state.month);
+  const tabs = [['pp', 'Power plant'], ['meters', 'Plant meters'], ['prod', 'Production'], ['events', 'Meter changes'], ['checks', 'Checks']];
+  const st = cache.month.status;
+  app.innerHTML = `
+    <div class="tabs">${tabs.map(([k, l]) => `<button class="${state.tab === k ? 'on' : ''}" data-t="${k}">${l}</button>`).join('')}</div>
+    ${st === 'final' ? `<div class="lock">🔒 ${monthLabel(state.month)} is final — figures are locked as sent${cache.month.is_history ? ' (loaded from the old workbook)' : ''}. Changes need a logged reason.</div>` : ''}
+    <div id="pane"></div>`;
+  app.querySelectorAll('.tabs button').forEach(b => b.onclick = () => location.hash = `m/${state.month}/${b.dataset.t}`);
+  ({ pp: ppTab, meters: metersTab, prod: prodTab, events: eventsTab, checks: checksTab })[state.tab]();
+}
+
+// --- save one reading (save as you go) ---
+async function saveReading(code, patch, el) {
+  const row = { month_key: state.month, meter_code: code, ...patch };
+  const { error } = await sb.from('reading').upsert(row, { onConflict: 'month_key,meter_code' });
+  if (error) { el && el.classList.add('err'); return toast(error.message, 5000); }
+  cache.rd[code] = { ...(cache.rd[code] || {}), ...row };
+  if (el) { el.classList.remove('err'); el.classList.add('saved'); setTimeout(() => el.classList.remove('saved'), 900); }
+}
+function kwhOf(code) {
+  const r = cache.rd[code] || {}; const ev = cache.events.find(e => e.meter_code === code);
+  if (ev) return ev.kwh_override ?? ((ev.old_final - (r.opening ?? 0)) + ((r.closing ?? 0) - (ev.new_initial ?? 0)));
+  if (r.opening != null && r.closing != null) return r.closing - r.opening;
+  return r.kwh_doc ?? null;
+}
+function bindNum(sel, fn) {
+  app.querySelectorAll(sel).forEach(inp => {
+    inp.addEventListener('change', async () => {
+      const v = parseNum(inp.value);
+      if (Number.isNaN(v)) { inp.classList.add('err'); return toast('Numbers only'); }
+      await fn(inp, v);
+    });
+  });
+}
+
+// ---------------- Power plant tab ----------------
+function ppTab() {
+  const ed = editable();
+  const pm = cache.meters.filter(m => m.kind === 'dg' || m.kind === 'pp_feeder');
+  const histKwhOnly = pm.every(m => cache.rd[m.code]?.opening == null && cache.rd[m.code]?.closing == null);
+  const firstLive = !cache.month.is_history && pm.some(m => cache.rd[m.code]?.opening == null);
+  const group = (title, list) => `<h3>${title}</h3>
+    <div class="row head"><div>Meter</div><div>Initial</div><div>Final</div><div class="k">kWh</div></div>
+    ${list.map(m => { const r = cache.rd[m.code] || {}; const k = kwhOf(m.code);
+      return `<div class="row"><div class="who"><div class="code">${m.code}</div><div class="name">${esc(m.name)}</div></div>
+      <div><span class="lab">Initial</span><input class="num" inputmode="decimal" data-c="${m.code}" data-f="opening" value="${r.opening ?? ''}" ${ed && (firstLive || r.opening == null) ? '' : 'readonly'} placeholder="${firstLive ? 'from PIC PDF' : ''}"></div>
+      <div><span class="lab">Final</span><input class="num" inputmode="decimal" data-c="${m.code}" data-f="closing" value="${r.closing ?? ''}" ${ed ? '' : 'readonly'}></div>
+      <div class="k ${k < 0 ? 'neg' : ''}" id="k_${m.code}">${fmt(k)}</div></div>`; }).join('')}`;
+  const gen = pm.filter(m => m.kind === 'dg').reduce((s, m) => s + (kwhOf(m.code) || 0), 0);
+  const out = pm.filter(m => m.kind === 'pp_feeder').reduce((s, m) => s + (kwhOf(m.code) || 0), 0);
+  const x = cache.ppx || {};
+  $('#pane').innerHTML = `<div class="card">
+    <h2>Power plant — PIC "Power Generation & Consumption"</h2>
+    ${histKwhOnly && cache.month.is_history ? '<p class="muted">History month: the old workbook holds kWh only, no meter readings.</p>' : ''}
+    ${firstLive ? '<p class="muted">First live month: type each <b>initial reading</b> once from the PIC PDF. From next month they carry forward automatically.</p>' : ''}
+    <div class="grid2"><div><label>PP reading date &amp; time</label><input type="datetime-local" id="ppAt" value="${cache.month.pp_read_at ? cache.month.pp_read_at.slice(0, 16) : ''}" ${ed && state.role === 'admin' ? '' : 'readonly'}></div></div>
+    ${group('Line 1 generation — DG1 to DG6', pm.filter(m => m.kind === 'dg').slice(0, 6))}
+    ${group('Line 2 generation — DG7 to DG9', pm.filter(m => m.kind === 'dg').slice(6))}
+    ${group('Line 1 outgoing feeders', pm.filter(m => m.kind === 'pp_feeder').slice(0, 9))}
+    ${group('Line 2 outgoing feeders', pm.filter(m => m.kind === 'pp_feeder').slice(9))}
+    <h3>Totals</h3>
+    <div class="grid2"><div>Generation (from readings): <b id="tGen">${fmt(gen)}</b> kWh</div><div>Outgoing (from readings): <b id="tOut">${fmt(out)}</b> kWh</div>
+    <div>Difference: <b id="tDif">${fmt(gen - out)}</b> kWh</div></div>
+    <h3>Cross-check — type the PDF's own totals</h3>
+    <div class="grid2">
+      <div><label>Total generation on PDF</label><input class="num px" inputmode="decimal" data-f="total_generation" value="${x.total_generation ?? ''}" ${ed ? '' : 'readonly'}></div>
+      <div><label>Total consumption on PDF</label><input class="num px" inputmode="decimal" data-f="total_outgoing" value="${x.total_outgoing ?? ''}" ${ed ? '' : 'readonly'}></div>
+      <div><label>Generation − consumption on PDF</label><input class="num px" inputmode="decimal" data-f="difference" value="${x.difference ?? ''}" ${ed ? '' : 'readonly'}></div>
+    </div>${monthActions()}</div>`;
+  const refresh = () => {
+    pm.forEach(m => { const k = kwhOf(m.code); const el = $('#k_' + m.code); el.textContent = fmt(k); el.className = 'k' + (k < 0 ? ' neg' : ''); });
+    const g = pm.filter(m => m.kind === 'dg').reduce((s, m) => s + (kwhOf(m.code) || 0), 0), o = pm.filter(m => m.kind === 'pp_feeder').reduce((s, m) => s + (kwhOf(m.code) || 0), 0);
+    $('#tGen').textContent = fmt(g); $('#tOut').textContent = fmt(o); $('#tDif').textContent = fmt(g - o);
+  };
+  bindNum('input[data-c]', async (inp, v) => { await saveReading(inp.dataset.c, { [inp.dataset.f]: v }, inp); refresh(); });
+  bindNum('input.px', async (inp, v) => {
+    const { error } = await sb.from('pp_crosscheck').upsert({ month_key: state.month, [inp.dataset.f]: v }, { onConflict: 'month_key' });
+    if (error) return toast(error.message, 5000); inp.classList.add('saved'); setTimeout(() => inp.classList.remove('saved'), 900);
+  });
+  const at = $('#ppAt'); at && at.addEventListener('change', () => saveMonthField('pp_read_at', at.value ? new Date(at.value).toISOString() : null));
+  bindActions();
+}
+async function saveMonthField(f, v) { const { error } = await sb.from('month').update({ [f]: v }).eq('month_key', state.month); if (error) toast(error.message, 5000); else toast('Saved'); }
+
+// ---------------- Plant meters tab ----------------
+function metersTab() {
+  const ed = editable();
+  const ms = cache.meters.filter(m => m.kind === 'plant' || m.kind === 'pump');
+  const sec = (t, list) => `<h3>${t}</h3><div class="row head"><div>Meter</div><div>Opening</div><div>Closing</div><div class="k">kWh</div></div>
+    ${list.map(m => { const r = cache.rd[m.code] || {}; const k = kwhOf(m.code); const ev = cache.events.some(e => e.meter_code === m.code);
+      return `<div class="row"><div class="who"><div class="code">${m.code}${m.status === 'out_of_service' ? ' <span class="pill INFO">out of service</span>' : ''}${ev ? ' <span class="pill WARNING">meter change</span>' : ''}</div><div class="name">${esc(m.name)}</div></div>
+      <div><span class="lab">Opening</span><input class="num" value="${r.opening ?? ''}" readonly></div>
+      <div><span class="lab">Closing</span><input class="num" inputmode="decimal" data-c="${m.code}" value="${r.closing ?? ''}" ${ed ? '' : 'readonly'}></div>
+      <div class="k ${k < 0 ? 'neg' : ''}" id="k_${m.code}">${fmt(k)}</div></div>`; }).join('')}`;
+  const L1 = ms.filter(m => m.kind === 'plant' && m.line === 'L1'), L2 = ms.filter(m => m.kind === 'plant' && m.line === 'L2'), P = ms.filter(m => m.kind === 'pump');
+  $('#pane').innerHTML = `<div class="card"><h2>Plant meters — closing readings</h2>
+    <p class="muted">Opening = last month's closing (carried forward). If a meter was replaced or rolled over, record it under <b>Meter changes</b> — never type over the opening.</p>
+    <div class="grid2"><div><label>Plant reading date &amp; time</label><input type="datetime-local" id="plAt" value="${cache.month.plant_read_at ? cache.month.plant_read_at.slice(0, 16) : ''}" ${ed && state.role === 'admin' ? '' : 'readonly'}></div></div>
+    ${sec('Line 1 (36 meters)', L1)}${sec('Line 2 (13 meters)', L2)}${sec('Water pumping station (3 meters)', P)}${monthActions()}</div>`;
+  bindNum('input[data-c]', async (inp, v) => {
+    await saveReading(inp.dataset.c, { closing: v }, inp);
+    const k = kwhOf(inp.dataset.c); const el = $('#k_' + inp.dataset.c); el.textContent = fmt(k); el.className = 'k' + (k < 0 ? ' neg' : '');
+    if (k < 0) toast(`${inp.dataset.c}: closing below opening — check the digits or record a meter change`, 4500);
+  });
+  const at = $('#plAt'); at && at.addEventListener('change', () => saveMonthField('plant_read_at', at.value ? new Date(at.value).toISOString() : null));
+  bindActions();
+}
+
+// ---------------- Production tab ----------------
+function prodTab() {
+  const ed = editable();
+  const hist = cache.month.is_history;
+  const show = cache.items.filter(i => hist ? (cache.pr[i.code] || i.section !== 'cement mills') && i.section !== 'cement mills' : !['cement mill totals'].includes(i.section) && !['opc_dispatch_t', 'src_dispatch_t'].includes(i.code));
+  const bySec = {}; show.forEach(i => (bySec[i.section] ??= []).push(i));
+  const order = ['crushers', 'raw mills', 'kilns', 'clinker consumption', 'cement mills', 'cement mill totals', 'dispatch'];
+  const v = c => cache.pr[c]?.value;
+  const millBlock = (mill) => {
+    const prods = [...new Set(cache.items.filter(i => i.mill === mill).map(i => i.product))];
+    const opt = cache.items.find(i => i.mill === mill)?.optional;
+    return `<h3>${mill === 'LM3' ? 'Loesche Mill 3 (optional, not running)' : mill === 'CM1' ? 'Cement Mill 1' : 'Cement Mill 2'}</h3>
+      <div class="row head"><div>Product</div><div>Tonnes</div><div>Hours</div><div></div></div>
+      ${prods.map(p => { const t = cache.items.find(i => i.mill === mill && i.product === p && i.unit === 't'), h = cache.items.find(i => i.mill === mill && i.product === p && i.unit === 'h');
+        return `<div class="row"><div class="who code">${esc(p)}</div>
+        <div><span class="lab">Tonnes</span><input class="num" inputmode="decimal" data-p="${t.code}" value="${v(t.code) ?? ''}" ${ed ? '' : 'readonly'}></div>
+        <div><span class="lab">Hours</span><input class="num" inputmode="decimal" data-p="${h.code}" value="${v(h.code) ?? ''}" ${ed ? '' : 'readonly'}></div><div></div></div>`; }).join('')}`;
+  };
+  let html = `<div class="card"><h2>Production — Monthly Production Summary</h2>`;
+  if (hist) html += '<p class="muted">History month: production was recorded at totals level in the old workbook.</p>';
+  for (const s of order) {
+    if (s === 'cement mills' && !hist) { html += millBlock('CM1') + millBlock('CM2') + millBlock('LM3') + `<p class="muted" id="cmTot"></p>`; continue; }
+    if (!bySec[s]) continue;
+    html += `<h3>${s}</h3>` + bySec[s].map(i => `<div class="row"><div class="who"><div class="code">${esc(i.name)}</div><div class="name">${i.unit === 't' ? 'tonnes' : 'hours'}${i.optional ? ' · optional' : ''}</div></div>
+      <div><input class="num" inputmode="decimal" data-p="${i.code}" value="${v(i.code) ?? ''}" ${ed ? '' : 'readonly'}></div><div></div><div></div></div>`).join('');
+  }
+  html += monthActions() + '</div>';
+  $('#pane').innerHTML = html;
+  const tot = () => { const el = $('#cmTot'); if (!el) return; const g = c => Number(cache.pr[c]?.value || 0);
+    const w1 = g('cm1_white_cem1_t') + g('cm1_white_cem2_t'), g1 = g('cm1_opc_t') + g('cm1_src_t') + g('cm1_owc_t');
+    const g2 = g('cm2_opc_t') + g('cm2_src_t') + g('cm2_owc_t') + g('cm2_fine_t') + g('cm2_pozz_t'), w2 = g('cm2_white_t');
+    const h1 = ['white_cem1', 'white_cem2', 'opc', 'src', 'owc'].reduce((s, p) => s + g(`cm1_${p}_h`), 0), h2 = ['opc', 'src', 'owc', 'fine', 'white', 'pozz'].reduce((s, p) => s + g(`cm2_${p}_h`), 0);
+    el.innerHTML = `Calculated: CM1 ${fmt(w1)} t white + ${fmt(g1)} t gray in ${fmt(h1, 1)} h · CM2 ${fmt(g2)} t gray + ${fmt(w2)} t white in ${fmt(h2, 1)} h`; };
+  tot();
+  bindNum('input[data-p]', async (inp, val) => {
+    const row = { month_key: state.month, item_code: inp.dataset.p, value: val };
+    const { error } = await sb.from('production').upsert(row, { onConflict: 'month_key,item_code' });
+    if (error) { inp.classList.add('err'); return toast(error.message, 5000); }
+    cache.pr[inp.dataset.p] = row; inp.classList.add('saved'); setTimeout(() => inp.classList.remove('saved'), 900); tot();
+  });
+  bindActions();
+}
+
+// ---------------- Meter changes tab ----------------
+function eventsTab() {
+  const ed = editable();
+  const ms = cache.meters.filter(m => m.kind === 'plant' || m.kind === 'pump');
+  $('#pane').innerHTML = `<div class="card"><h2>Meter changes</h2>
+    <p class="muted">Record a meter replacement, reset or rollover here. The month's kWh is then: (old meter final − opening) + (closing − new meter initial).</p>
+    ${cache.events.length ? cache.events.map(e => `<div class="sev INFO"><b>${e.meter_code}</b> · ${e.event_type} · old final ${fmt(e.old_final)} → new initial ${fmt(e.new_initial)}${e.kwh_override != null ? ` · kWh fixed at ${fmt(e.kwh_override)}` : ''}<br><span class="muted">${esc(e.note || '')}</span>
+      ${ed ? `<div class="actions"><button class="sec" data-del="${e.id}">Delete</button></div>` : ''}</div>`).join('') : '<p class="muted">No meter changes this month.</p>'}
+    ${ed ? `<h3>Add a meter change</h3>
+    <div class="grid2">
+      <div><label>Meter</label><select id="evM">${ms.map(m => `<option value="${m.code}">${m.code} — ${esc(m.name)}</option>`).join('')}</select></div>
+      <div><label>Type</label><select id="evT"><option value="replacement">Replacement (new meter)</option><option value="reset">Reset to zero</option><option value="rollover">Rollover (passed its maximum)</option></select></div>
+      <div><label>Old meter final reading</label><input class="num" id="evO" inputmode="decimal"></div>
+      <div><label>New meter initial reading</label><input class="num" id="evN" inputmode="decimal" value="0"></div>
+      <div><label>Date &amp; time of change</label><input type="datetime-local" id="evD"></div>
+      <div><label>Note (who, why)</label><input id="evNote"></div>
+    </div><div class="actions"><button class="primary" id="evAdd">Save meter change</button></div>` : ''}</div>`;
+  if (!ed) return;
+  $('#evAdd').onclick = async () => {
+    const o = parseNum($('#evO').value), n = parseNum($('#evN').value);
+    if (o == null || Number.isNaN(o) || Number.isNaN(n)) return toast('Enter the old meter final reading (numbers only)');
+    await q(sb.from('meter_event').insert({ month_key: state.month, meter_code: $('#evM').value, event_type: $('#evT').value, old_final: o, new_initial: n ?? 0,
+      event_at: $('#evD').value ? new Date($('#evD').value).toISOString() : null, note: $('#evNote').value || null }));
+    toast('Meter change saved'); monthView();
+  };
+  app.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => { if (!confirm('Delete this meter change?')) return; await q(sb.from('meter_event').delete().eq('id', b.dataset.del)); monthView(); });
+}
+
+// ---------------- Checks tab ----------------
+async function checksTab() {
+  const ed = editable();
+  $('#pane').innerHTML = `<div class="card"><h2>Checks</h2><div id="ck">Loading…</div>${monthActions()}</div>`;
+  bindActions();
+  const rows = await q(sb.from('check_result').select('*').eq('month_key', state.month).order('id'));
+  const ord = { STOP: 0, WARNING: 1, INFO: 2 }; rows.sort((a, b) => ord[a.severity] - ord[b.severity]);
+  const n = s => rows.filter(r => r.severity === s).length;
+  $('#ck').innerHTML = rows.length ? `<p><span class="pill STOP">${n('STOP')} STOP</span> <span class="pill WARNING">${n('WARNING')} warning</span> <span class="pill INFO">${n('INFO')} note</span>
+    <span class="muted"> · last run ${new Date(rows[0].calculated_at).toLocaleString('en-GB')}</span></p>
+    ${rows.map(r => `<div class="sev ${r.severity}"><b>${r.severity === 'STOP' ? 'STOP' : r.severity === 'WARNING' ? 'Warning' : 'Note'}</b> · ${esc(r.message)}</div>`).join('')}
+    <p class="muted">STOP items block "final". Warnings do not block — the figure is published flagged.</p>`
+    : `<p class="muted">Checks have not been run for this month yet${ed ? ' — press <b>Run checks</b>' : ''}.</p>`;
+}
+
+// ---------------- month actions ----------------
+function monthActions() {
+  if (!editable()) return '';
+  const st = cache.month.status;
+  return `<div class="actions" style="border-top:1px solid var(--line);padding-top:12px;margin-top:14px">
+    <button class="sec" data-act="checks">Run checks</button>
+    ${st === 'draft' ? '<button class="sec" data-act="checked">Mark checked</button>' : ''}
+    <button class="primary" data-act="final">Mark final</button></div>`;
+}
+function bindActions() {
+  app.querySelectorAll('[data-act]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    try {
+      if (b.dataset.act === 'checks') {
+        await q(sb.schema('energy').rpc('recalculate', { p_month: state.month }));
+        const r = await q(sb.schema('energy').rpc('run_checks', { p_month: state.month }));
+        toast(`Checks: ${r.stop} STOP, ${r.warning} warning`); location.hash = `m/${state.month}/checks`; if (state.tab === 'checks') monthView();
+      } else {
+        if (b.dataset.act === 'final' && !confirm(`Mark ${monthLabel(state.month)} final? Its figures will be locked as sent.`)) { b.disabled = false; return; }
+        const r = await q(sb.schema('energy').rpc('set_month_status', { p_month: state.month, p_status: b.dataset.act }));
+        toast(`${monthLabel(state.month)}: ${r.status}${r.stop != null ? ` (${r.stop} STOP, ${r.warning} warning)` : ''}`); monthView();
+      }
+    } catch (e) { b.disabled = false; }
+  });
+}
+
+boot();
+</script>
+</body>
+</html>
