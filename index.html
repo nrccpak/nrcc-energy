@@ -41,6 +41,59 @@ table.months th{font-size:12px;color:var(--mute)} table.months tr{cursor:pointer
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#1d2330;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;z-index:9;max-width:92vw}
 .lock{background:#f2f4f7;border-radius:8px;padding:8px 10px;font-size:13px;color:#344054;margin-bottom:10px}
+nav.top{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+nav.top button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;font-size:14px}
+nav.top button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+/* report */
+.rep{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px 24px;margin-bottom:12px}
+.rep-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--brand);padding-bottom:10px;margin-bottom:16px;gap:10px;flex-wrap:wrap}
+.rep-head .t1{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.rep-head .t2{font-size:22px;font-weight:700;color:var(--brand)}
+.rep h2.sec{font-size:15px;margin:22px 0 8px;padding:6px 10px;background:#eef4f0;border-left:4px solid var(--brand);border-radius:4px;color:var(--brand)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:6px 0 10px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kpi .l{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+.kpi .v{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .u{font-size:13px;color:var(--mute);font-weight:500}
+.kpi .s{font-size:12px;margin-top:4px}
+.kpi svg{display:block;margin-top:6px;width:100%;height:36px}
+table.t{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 8px}
+table.t th{background:#f2f4f7;color:#344054;font-weight:600;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);font-size:12px}
+table.t td{padding:6px 8px;border-bottom:1px solid #eef0f3;vertical-align:top}
+table.t td.n,table.t th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.t tr.sub td{font-weight:700;background:#fafbfc}
+table.t tr.head td{font-weight:700;background:#eef4f0;color:var(--brand)}
+.st{display:inline-block;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:600;white-space:nowrap}
+.st-ok{background:var(--okbg);color:var(--ok)}.st-flagged{background:var(--warnbg);color:var(--warn)}.st-not_in_operation{background:#f2f4f7;color:#475467}
+.st-low_utilisation{background:var(--infobg);color:var(--info)}.st-estimated{background:#f4f3ff;color:#5925dc}.st-out_of_service{background:#f2f4f7;color:#475467}
+.foot{font-size:11px;color:var(--mute);margin-top:18px;border-top:1px solid var(--line);padding-top:8px}
+.tbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.tbar .grow{flex:1}
+/* trends */
+.tr-grid{display:grid;grid-template-columns:300px 1fr;gap:12px}
+.picker{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.picker h4{margin:10px 0 4px;font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+.picker label{display:flex;gap:8px;align-items:flex-start;margin:0;padding:4px 2px;font-size:13px;color:var(--ink);cursor:pointer}
+.picker input{width:auto;margin-top:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.chip{border-radius:999px;padding:3px 10px;font-size:12px;color:#fff}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:8px 0}
+.opts label{display:flex;gap:6px;align-items:center;margin:0;color:var(--ink);font-size:13px}
+.opts input[type=checkbox]{width:auto}
+.chartbox{position:relative;height:420px}
+details.rule{border-bottom:1px solid var(--line);padding:8px 2px}
+details.rule summary{cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:10px;font-size:14px}
+details.rule summary .val{font-weight:700;font-variant-numeric:tabular-nums}
+@media print{
+  header,nav.top,.tabs,.tbar,.lock,.actions,.toast,.noprint{display:none!important}
+  body{background:#fff;font-size:11px} main{max-width:none;padding:0}
+  .rep{border:0;padding:0;margin:0}
+  .rep h2.sec{break-after:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.t th,.kpi,.st,table.t tr.sub td,table.t tr.head td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.t{font-size:10px} .pb{break-before:page} tr{break-inside:avoid}
+  @page{size:A4;margin:14mm 12mm}
+}
+@media (max-width:820px){.tr-grid{grid-template-columns:1fr}.picker{max-height:260px}}
 @media (max-width:640px){
   .row{grid-template-columns:1fr 1fr;row-gap:6px}
   .row .who{grid-column:1/3}
@@ -105,6 +158,9 @@ function route() {
   const h = location.hash.replace('#', '');
   const m = h.match(/^m\/(\d{4}-\d{2})(?:\/(\w+))?$/);
   if (m) { state.month = m[1]; state.tab = m[2] || 'pp'; return monthView(); }
+  if (h.startsWith('trends')) return trendsView();
+  if (h === 'rules') return rulesView();
+  if (h === 'history') return historyView();
   homeView();
 }
 
@@ -121,7 +177,7 @@ async function homeView() {
   const last = keys[0];
   const next = last ? (() => { const [y, m] = last.split('-').map(Number); const d = new Date(y, m, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; })() : null;
   const canOpen = ['admin', 'entry'].includes(state.role) && months[0]?.status === 'final';
-  app.innerHTML = `
+  app.innerHTML = topNav('home') + `
   <div class="card"><h2>Months</h2>
     ${canOpen ? `<div class="actions" style="margin:0 0 10px"><button class="primary" id="openNext">Start ${monthLabel(next)}</button></div>` :
       (months[0] && months[0].status !== 'final' ? `<p class="muted">Finish ${monthLabel(last)} before starting the next month.</p>` : '')}
@@ -134,7 +190,7 @@ async function homeView() {
       <td class="hide-s">${c ? `${c.STOP ? `<span class="pill STOP">${c.STOP} STOP</span> ` : ''}${c.WARNING ? `<span class="pill WARNING">${c.WARNING} warn</span>` : ''}` : '<span class="muted">—</span>'}</td></tr>`; }).join('')}
     </tbody></table>
     <p class="muted">* estimated — kiln stopped, cement ground from stock clinker (decision 51).</p></div>`;
-  app.querySelectorAll('tr[data-m]').forEach(tr => tr.onclick = () => location.hash = `m/${tr.dataset.m}/pp`);
+  app.querySelectorAll('tr[data-m]').forEach(tr => tr.onclick = () => location.hash = `m/${tr.dataset.m}/${months.find(x => x.month_key === tr.dataset.m).status === 'final' ? 'report' : 'pp'}`);
   const b = $('#openNext'); if (b) b.onclick = async () => { await q(sb.schema('energy').rpc('open_month', { p_month: next })); toast(`${monthLabel(next)} started — opening readings carried forward`); location.hash = `m/${next}/pp`; };
 }
 
@@ -163,14 +219,14 @@ async function monthView() {
   $('#title').textContent = monthLabel(state.month);
   app.innerHTML = '<div class="card">Loading…</div>';
   await loadMonth(state.month);
-  const tabs = [['pp', 'Power plant'], ['meters', 'Plant meters'], ['prod', 'Production'], ['events', 'Meter changes'], ['checks', 'Checks']];
+  const tabs = [['report', 'Report'], ['pp', 'Power plant'], ['meters', 'Plant meters'], ['prod', 'Production'], ['events', 'Meter changes'], ['checks', 'Checks']];
   const st = cache.month.status;
   app.innerHTML = `
     <div class="tabs">${tabs.map(([k, l]) => `<button class="${state.tab === k ? 'on' : ''}" data-t="${k}">${l}</button>`).join('')}</div>
     ${st === 'final' ? `<div class="lock">🔒 ${monthLabel(state.month)} is final — figures are locked as sent${cache.month.is_history ? ' (loaded from the old workbook)' : ''}. Changes need a logged reason.</div>` : ''}
     <div id="pane"></div>`;
   app.querySelectorAll('.tabs button').forEach(b => b.onclick = () => location.hash = `m/${state.month}/${b.dataset.t}`);
-  ({ pp: ppTab, meters: metersTab, prod: prodTab, events: eventsTab, checks: checksTab })[state.tab]();
+  ({ report: reportTab, pp: ppTab, meters: metersTab, prod: prodTab, events: eventsTab, checks: checksTab })[state.tab]();
 }
 
 // --- save one reading (save as you go) ---
@@ -380,6 +436,470 @@ function bindActions() {
       }
     } catch (e) { b.disabled = false; }
   });
+}
+
+// ================= shared helpers for report / trends / rules / history =================
+function topNav(active) {
+  const b = (k, l, h) => `<button class="${active === k ? 'on' : ''}" onclick="location.hash='${h}'">${l}</button>`;
+  return `<nav class="top noprint">${b('home', 'Months', '')}${b('trends', 'Trends', 'trends')}${b('rules', 'Rules', 'rules')}${b('history', 'History', 'history')}</nav>`;
+}
+function loadScript(src) {
+  return new Promise((res, rej) => { if (document.querySelector(`script[src="${src}"]`)) return res(); const e = document.createElement('script'); e.src = src; e.onload = res; e.onerror = rej; document.head.appendChild(e); });
+}
+const CHART_JS = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+const EXCEL_JS = 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+const STATUS_TXT = { ok: 'OK', flagged: 'Flagged', not_in_operation: 'Not in operation', low_utilisation: 'Low utilisation', estimated: 'Estimated', out_of_service: 'Out of service' };
+const stBadge = s => s ? `<span class="st st-${s}">${STATUS_TXT[s] || s}</span>` : '';
+const pct = v => v == null || isNaN(v) ? '—' : (100 * v).toLocaleString('en-US', { maximumFractionDigits: 0 }) + '%';
+function spark(vals, color = '#157347') {
+  const v = vals.map(x => x == null ? null : Number(x)); const ok = v.filter(x => x != null); if (ok.length < 2) return '';
+  const mn = Math.min(...ok), mx = Math.max(...ok), w = 200, h = 36, n = v.length; const y = x => h - 4 - (mx === mn ? 0.5 : (x - mn) / (mx - mn)) * (h - 8);
+  let d = '', pen = false; v.forEach((x, i) => { if (x == null) { pen = false; return; } d += (pen ? 'L' : 'M') + (i * (w / (n - 1))).toFixed(1) + ' ' + y(x).toFixed(1) + ' '; pen = true; });
+  const last = v.length - 1;
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="${d}" fill="none" stroke="${color}" stroke-width="2" vector-effect="non-scaling-stroke"/>${v[last] != null ? `<circle cx="${w}" cy="${y(v[last])}" r="3" fill="${color}"/>` : ''}</svg>`;
+}
+
+// ================= REPORT (decision 42: 7 sections) =================
+let REP = null;
+async function reportTab() {
+  $('#pane').innerHTML = '<div class="card">Building the report…</div>';
+  const R = REP = await q(sb.schema('energy').rpc('month_report', { p_month: state.month }));
+  const S = R.S, L = R.legacy, r1 = R.r1, ml = monthLabel(R.month);
+  const g = k => S[k] ?? null;
+  const st = (k, fallback = 'ok') => S[k] == null ? 'not_in_operation' : fallback;
+  const nStop = R.checks.filter(c => c.sev === 'STOP').length, nWarn = R.checks.filter(c => c.sev === 'WARNING').length;
+  const outgoing = g('PP!H22') || 0, l1Out = g('PP!H13') || 0, l2Out = g('PP!H20') || 0;
+  const ppAux = (g('Summary!C41') || 0) + (g('Summary!I14') || 0), housing = g('Summary!C40') || 0, wts = g('water_treatment_station') || 0;
+  const mm1 = g('Consumption!D155') || 0, mm2 = g('Summary!L23') || 0, ppdiff = g('PP!H25') || 0;
+  const plant = outgoing - ppAux - housing - wts - mm1 - mm2;
+  const grayEst = R.status_notes.gray, whiteEst = R.status_notes.white;
+  const tr = R.trend || [];
+  const kpi = (label, v, unit, status, note, sp, old) => `<div class="kpi"><div class="l">${label}</div>
+    <div class="v">${v == null ? '—' : fmt(v, 1)} <span class="u">${unit}</span></div>
+    <div class="s">${stBadge(status)} ${note ? `<span class="muted">${esc(note)}</span>` : ''}</div>
+    ${old != null ? `<div class="s muted">Old workbook reported ${fmt(old, 1)} ${unit}</div>` : ''}${sp || ''}</div>`;
+  const row = (name, kwh, t, kt, ex, perf, status, cls = '') => `<tr class="${cls}"><td>${name}</td><td class="n">${fmt(kwh)}</td><td class="n">${t == null ? '' : fmt(t)}</td>
+    <td class="n">${kt == null ? (status === 'not_in_operation' ? '—' : '') : fmt(kt, 2)}</td><td class="n">${ex == null ? '' : fmt(ex)}</td><td class="n">${perf == null ? '' : pct(1 / perf)}</td><td>${stBadge(status)}</td></tr>`;
+  const r1row = (code, label) => { const x = r1[code] || {}; return row(label, x.kwh, x.tonnes, x.kwh_t, x.good_fit ? x.expected : null, x.good_fit ? x.perf : null, x.status) + (x.good_fit === false && x.status !== 'not_in_operation' ? `<tr><td colspan="7" class="muted" style="font-size:11px">Yardstick fit too weak (R² ${fmt(x.r2, 2)}) — plain kWh/t shown.</td></tr>` : ''); };
+  const thead = `<thead><tr><th>Process</th><th class="n">kWh</th><th class="n">Tonnes</th><th class="n">kWh/t</th><th class="n">Expected kWh</th><th class="n">Energy vs expected</th><th>Status</th></tr></thead>`;
+  const feederRows = R.feeders.map(f => { const d = f.plant_kwh != null && f.kwh ? 100 * (f.plant_kwh - f.kwh) / f.kwh : null;
+    return `<tr><td>${f.code}</td><td>${esc(f.name)}</td><td class="n">${fmt(f.kwh)}</td><td>${f.plant || ''}</td><td class="n">${f.plant_kwh != null ? fmt(f.plant_kwh) : ''}</td><td class="n">${d == null ? '' : (d > 0 ? '+' : '') + d.toFixed(1) + '%'}</td></tr>`; }).join('');
+  const dgRows = R.dg.map(d => `<tr><td>${d.code}</td><td>${esc(d.name)}</td><td class="n">${fmt(d.kwh)}</td><td class="n">${g('PP!C15') ? (100 * (d.kwh || 0) / g('PP!C15')).toFixed(1) + '%' : ''}</td></tr>`).join('');
+  const chk = R.checks.length ? R.checks.map(c => `<div class="sev ${c.sev}"><b>${c.sev === 'STOP' ? 'STOP' : c.sev === 'WARNING' ? 'Warning' : 'Note'}</b> · ${esc(c.msg)}</div>`).join('') : '<p class="muted">Checks have not been run for this month.</p>';
+  $('#pane').innerHTML = `
+  <div class="tbar noprint"><div class="grow muted">Report for ${ml} · ${R.status}${R.is_history ? ' · history month' : ''}</div>
+    <button class="sec" id="btnPdf">PDF / Print</button><button class="primary" id="btnXls">Download Excel</button></div>
+  <div class="rep" id="report">
+    <div class="rep-head"><div><div class="t1">Northern Region Cement Company · Turaif</div><div class="t2">Monthly Energy Report — ${ml}</div>
+      <div class="muted">Line I, Line II and captive power plant · prepared by the Electrical Department</div></div>
+      <div style="text-align:right"><span class="pill p-${R.status}">${R.status.toUpperCase()}</span><div class="muted" style="margin-top:4px">${R.finalised_at ? 'Final ' + new Date(R.finalised_at).toLocaleDateString('en-GB') : 'Not final'}</div></div></div>
+
+    <h2 class="sec">1 · Summary</h2>
+    <div class="kpis">
+      ${kpi('Gray cement', g('Summary!C38'), 'kWh/t', grayEst ? 'estimated' : st('Summary!C38'), grayEst ? 'kiln stopped — clinker part from recent months' : '', spark(tr.map(x => x.gray)), R.is_history ? L['Summary!C38'] : null)}
+      ${kpi('White cement', g('Summary!J37'), 'kWh/t', whiteEst ? 'estimated' : st('Summary!J37'), whiteEst ? 'kiln stopped — clinker part from recent months' : '', spark(tr.map(x => x.white), '#5925dc'), R.is_history ? L['Summary!J37'] : null)}
+      <div class="kpi"><div class="l">Checks</div><div class="v">${nStop} <span class="u">STOP</span> · ${nWarn} <span class="u">warnings</span></div><div class="s muted">${nStop ? 'Must be fixed before final' : 'No blocking item'}</div></div>
+    </div>
+    <table class="t"><thead><tr><th>Energy balance</th><th class="n">kWh</th><th class="n">% of generation</th></tr></thead><tbody>
+      <tr class="sub"><td>Total generation (DG1–DG9)</td><td class="n">${fmt(g('PP!C15'))}</td><td class="n">100.0%</td></tr>
+      <tr><td>Sent out on power plant feeders</td><td class="n">${fmt(outgoing)}</td><td class="n">${(100 * outgoing / (g('PP!C15') || 1)).toFixed(1)}%</td></tr>
+      <tr><td>Power plant internal difference (generation − feeders)</td><td class="n">${fmt(ppdiff)}</td><td class="n">${(100 * ppdiff / (g('PP!C15') || 1)).toFixed(2)}%</td></tr>
+      <tr class="sub"><td>Plant process &amp; utilities (metered)</td><td class="n">${fmt(plant)}</td><td class="n">${(100 * plant / (g('PP!C15') || 1)).toFixed(1)}%</td></tr>
+      <tr><td>Power plant auxiliaries (Aux-1, 2, 3)</td><td class="n">${fmt(ppAux)}</td><td class="n">${(100 * ppAux / (g('PP!C15') || 1)).toFixed(1)}%</td></tr>
+      <tr><td>Housing colony</td><td class="n">${fmt(housing)}</td><td class="n">${(100 * housing / (g('PP!C15') || 1)).toFixed(1)}%</td></tr>
+      <tr><td>Water treatment station (non-plant, decision 24)</td><td class="n">${fmt(wts)}</td><td class="n">${(100 * wts / (g('PP!C15') || 1)).toFixed(1)}%</td></tr>
+      <tr><td>Metering mismatch Line 1 + Line 2 (kept out of KPIs)</td><td class="n">${fmt(mm1 + mm2)}</td><td class="n">${(100 * (mm1 + mm2) / (g('PP!C15') || 1)).toFixed(1)}%</td></tr>
+    </tbody></table>
+
+    <h2 class="sec">2 · Line I</h2>
+    <table class="t">${thead}<tbody>
+      <tr class="head"><td colspan="7">Clinker line</td></tr>
+      ${r1row('LS1', 'Limestone crusher 1')}
+      ${row('Corrective crusher', g('Summary!C7'), g('Summary!D7'), g('Summary!E7'), null, null, st('Summary!E7'))}
+      ${r1row('RM1', 'Raw mill 1')}
+      ${r1row('K1', 'Kiln 1')}
+      ${row('Clinker line I (crushers + raw mill + kiln)', g('Summary!C10'), g('Summary!D9'), g('Summary!E10'), null, null, st('Summary!E10'), 'sub')}
+      ${row('Utilities — clinker share', g('Summary!C11'), null, g('Summary!E11'), null, null, st('Summary!E11'))}
+      ${row('Clinker incl. utilities', g('Summary!C12'), g('Summary!D9'), g('Summary!E12'), null, null, st('Summary!E12'), 'sub')}
+      <tr class="head"><td colspan="7">Cement</td></tr>
+      ${row('Additive crusher', g('Summary!C14'), g('Summary!D14'), g('Summary!E14'), null, null, st('Summary!E14'))}
+      ${r1row('CM1', 'Cement mill 1 (all products, mill area)')}
+      ${r1row('CM2', 'Cement mill 2 (all products, mill area)')}
+      ${row('White cement — mills + roller press', g('Summary!C17'), g('Summary!D15'), g('Summary!E17'), null, null, st('Summary!E17'))}
+      ${row('Gray cement — mills + roller press', g('Summary!C20'), g('Summary!D18'), g('Summary!E20'), null, null, st('Summary!E20'))}
+      ${row('Utilities — gray cement share', g('Summary!C23'), g('Summary!D18'), g('Summary!E23'), null, null, st('Summary!E23'))}
+      ${row('Packing plant (÷ all cement produced)', g('Summary!C26'), g('Summary!D21'), g('Summary!E26'), null, null, st('Summary!E26'))}
+    </tbody></table>
+    <table class="t"><thead><tr><th>Gray cement headline (kWh per tonne of gray cement)</th><th class="n">Value</th></tr></thead><tbody>
+      <tr><td>Clinker used per tonne of gray cement</td><td class="n">${fmt(g('Summary!C30'), 3)} t/t</td></tr>
+      <tr><td>Clinker part (clinker incl. utilities × ratio)</td><td class="n">${fmt(g('Summary!C33'), 2)}</td></tr>
+      <tr><td>Grinding incl. utilities</td><td class="n">${fmt(g('Summary!C35'), 2)}</td></tr>
+      <tr><td>Packing</td><td class="n">${fmt(g('Summary!C36'), 2)}</td></tr>
+      <tr class="sub"><td>Gray cement ${grayEst ? '(estimated — kiln stopped)' : ''}</td><td class="n">${fmt(g('Summary!C38'), 2)} kWh/t</td></tr>
+    </tbody></table>
+
+    <h2 class="sec">3 · Line II</h2>
+    <table class="t">${thead}<tbody>
+      ${r1row('LS2', 'Limestone crusher 2')}
+      ${r1row('RM2', 'Raw mill 2 (incl. unmetered substation remainder)')}
+      ${r1row('K2', 'Kiln 2')}
+      ${row('Clinker line II', g('Summary!K10'), g('Summary!L9'), g('Summary!M10'), null, null, st('Summary!M10'), 'sub')}
+      ${row('Utilities Line II', g('Summary!K11'), g('Summary!L9'), g('Summary!M11'), null, null, st('Summary!M11'))}
+      ${row('Clinker II incl. utilities', g('Summary!K12'), g('Summary!L9'), g('Summary!M12'), null, null, st('Summary!M12'), 'sub')}
+    </tbody></table>
+    <table class="t"><thead><tr><th>White cement headline (kWh per tonne of white cement)</th><th class="n">Value</th></tr></thead><tbody>
+      <tr><td>Clinker used per tonne of white cement</td><td class="n">${fmt(g('Summary!J29'), 3)} t/t</td></tr>
+      <tr><td>Clinker part (Line II clinker incl. utilities × ratio)</td><td class="n">${fmt(g('Summary!J32'), 2)}</td></tr>
+      <tr><td>Grinding incl. utilities share</td><td class="n">${fmt(g('Summary!J34'), 2)}</td></tr>
+      <tr><td>Packing</td><td class="n">${fmt(g('Summary!J35'), 2)}</td></tr>
+      <tr class="sub"><td>White cement ${whiteEst ? '(estimated — kiln stopped)' : ''}</td><td class="n">${fmt(g('Summary!J37'), 2)} kWh/t</td></tr>
+    </tbody></table>
+
+    <h2 class="sec pb">4 · Power plant &amp; energy balance</h2>
+    <div class="grid2"><div><table class="t"><thead><tr><th>Unit</th><th>Meter</th><th class="n">kWh</th><th class="n">Share</th></tr></thead><tbody>${dgRows}
+      <tr class="sub"><td colspan="2">Total generation</td><td class="n">${fmt(g('PP!C15'))}</td><td class="n">100%</td></tr></tbody></table></div>
+    <div><table class="t"><thead><tr><th>Quantity</th><th class="n">kWh</th></tr></thead><tbody>
+      <tr><td>Feeders to Line I</td><td class="n">${fmt(l1Out)}</td></tr><tr><td>Feeders to Line II</td><td class="n">${fmt(l2Out)}</td></tr>
+      <tr><td>Power plant internal difference</td><td class="n">${fmt(ppdiff)}</td></tr>
+      <tr><td>Raw mill 2 substation remainder (E1A, unmetered load)</td><td class="n">${fmt(g('E1A_substation_remainder'))}</td></tr>
+      <tr><td>Cement mill substation remainder (E14, unmetered load)</td><td class="n">${fmt(g('E14_substation_remainder'))}</td></tr>
+      <tr class="sub"><td>Metering mismatch Line I (this month)</td><td class="n">${fmt(mm1)} · ${l1Out ? (100 * mm1 / l1Out).toFixed(2) : '—'}%</td></tr>
+      <tr class="sub"><td>Metering mismatch Line II (this month)</td><td class="n">${fmt(mm2)} · ${l2Out ? (100 * mm2 / l2Out).toFixed(2) : '—'}%</td></tr>
+      <tr><td>Running total, last ${R.run12.months} months — Line I / Line II</td><td class="n">${fmt(R.run12.l1)} / ${fmt(R.run12.l2)}</td></tr>
+    </tbody></table></div></div>
+    <table class="t"><thead><tr><th>Feeder</th><th>Supplies</th><th class="n">PP side kWh</th><th>Plant incomer</th><th class="n">Plant side kWh</th><th class="n">Difference</th></tr></thead><tbody>${feederRows}</tbody></table>
+    <p class="muted">Feeder check limit ±3% (Rules). Metering mismatch = power plant feeders − plant meters: reading-time and calibration differences, kept out of every kWh/t (decision 19).</p>
+
+    <h2 class="sec">5 · Checks</h2>${chk}
+
+    <h2 class="sec">6 · Trends — last ${tr.length} months</h2>
+    <div class="chartbox" style="height:240px"><canvas id="repChart"></canvas></div>
+    <table class="t"><thead><tr><th>Month</th>${tr.map(x => `<th class="n">${monthLabel(x.m).replace(' 20', ' ')}</th>`).join('')}</tr></thead><tbody>
+      <tr><td>Gray kWh/t</td>${tr.map(x => `<td class="n">${x.gray == null ? '—' : fmt(x.gray, 1) + (x.gray_est ? '*' : '')}</td>`).join('')}</tr>
+      <tr><td>White kWh/t</td>${tr.map(x => `<td class="n">${x.white == null ? '—' : fmt(x.white, 1)}</td>`).join('')}</tr></tbody></table>
+
+    <h2 class="sec">7 · Rules &amp; changes this month</h2>
+    ${R.rules_changed.length ? `<table class="t"><thead><tr><th>Rule</th><th>New value</th><th>Reason</th></tr></thead><tbody>${R.rules_changed.map(x => `<tr><td>${esc(x.name)} (${x.rule}.${x.setting})</td><td>${esc(x.value)}</td><td>${esc(x.reason || '')}</td></tr>`).join('')}</tbody></table>` : '<p>No rule changed from this month. All rules in force are listed in the Excel download and on the Rules screen.</p>'}
+    ${R.changes.length ? `<p><b>Changes after final:</b></p>${R.changes.map(c => `<div class="sev INFO">${new Date(c.at).toLocaleString('en-GB')} · ${esc(c.tbl)} · ${esc(c.reason || '')}</div>`).join('')}` : '<p class="muted">No changes after final.</p>'}
+    ${R.is_history ? `<p class="muted">History month: inputs from the old workbook, recalculated with the agreed rules. Old workbook reported gray ${fmt(L['Summary!C38'], 1)} and white ${fmt(L['Summary!J37'], 1)} kWh/t; see the transition note (Trends → "Old vs new").</p>` : ''}
+    <div class="foot">Every figure is calculated on the server from the recorded readings, production and the Rules table — nothing typed. Readings: plant ${R.plant_read_at ? new Date(R.plant_read_at).toLocaleString('en-GB') : '—'} · power plant ${R.pp_read_at ? new Date(R.pp_read_at).toLocaleString('en-GB') : '—'} · generated ${new Date().toLocaleString('en-GB')}.</div>
+  </div>`;
+  $('#btnPdf').onclick = () => window.print();
+  $('#btnXls').onclick = () => exportReportExcel(R, { plant, ppAux, housing, wts, mm1, mm2, ppdiff, outgoing, l1Out, l2Out }).catch(e => toast(e.message || 'Excel export failed', 5000));
+  try {
+    await loadScript(CHART_JS);
+    new Chart($('#repChart'), { type: 'line', data: { labels: tr.map(x => monthLabel(x.m)), datasets: [
+      { label: 'Gray kWh/t', data: tr.map(x => x.gray), borderColor: '#157347', backgroundColor: '#157347', tension: .25, spanGaps: false, pointStyle: tr.map(x => x.gray_est ? 'triangle' : 'circle'), pointRadius: tr.map(x => x.gray_est ? 6 : 3) },
+      { label: 'White kWh/t', data: tr.map(x => x.white), borderColor: '#5925dc', backgroundColor: '#5925dc', tension: .25, yAxisID: 'y2' }] },
+      options: { maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { position: 'bottom' } },
+        scales: { y: { title: { display: true, text: 'Gray kWh/t' } }, y2: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'White kWh/t' } } } } });
+  } catch (e) { /* chart is optional */ }
+}
+
+// ---------- Excel export of the report (formatted) ----------
+async function exportReportExcel(R, X) {
+  await loadScript(EXCEL_JS);
+  const S = R.S, g = k => S[k] ?? null, ml = monthLabel(R.month);
+  const wb = new ExcelJS.Workbook(); wb.creator = 'NRCC Energy'; wb.created = new Date();
+  const GREEN = 'FF0F5132', LIGHT = 'FFEEF4F0', GREY = 'FFF2F4F7';
+  const sheet = (name, widths) => { const ws = wb.addWorksheet(name, { pageSetup: { paperSize: 9, orientation: 'portrait', fitToPage: true, fitToWidth: 1, fitToHeight: 0, margins: { left: .5, right: .5, top: .6, bottom: .6, header: .3, footer: .3 } }, views: [{ showGridLines: false }] });
+    ws.columns = widths.map(w => ({ width: w })); ws.headerFooter.oddFooter = `&L NRCC Monthly Energy Report — ${ml}&R Page &P of &N`; return ws; };
+  const title = (ws, t, sub) => { ws.addRow([t]).font = { bold: true, size: 15, color: { argb: GREEN } }; ws.addRow([sub]).font = { italic: true, size: 10, color: { argb: 'FF667085' } }; ws.addRow([]); };
+  const head = (ws, cells) => { const r = ws.addRow(cells); r.eachCell(c => { c.font = { bold: true, color: { argb: 'FFFFFFFF' } }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: GREEN } }; c.alignment = { vertical: 'middle', wrapText: true }; }); r.height = 20; return r; };
+  const band = (ws, t, n) => { const r = ws.addRow([t]); ws.mergeCells(r.number, 1, r.number, n); r.getCell(1).font = { bold: true, color: { argb: GREEN } }; r.getCell(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: LIGHT } }; };
+  const line = (ws, cells, fmts, bold) => { const r = ws.addRow(cells.map(v => v == null || (typeof v === 'number' && isNaN(v)) ? null : v)); fmts.forEach((f, i) => { if (f) r.getCell(i + 1).numFmt = f; }); r.eachCell({ includeEmpty: true }, c => { c.border = { bottom: { style: 'hair', color: { argb: 'FFD0D5DD' } } }; if (bold) { c.font = { bold: true }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: GREY } }; } }); return r; };
+  const K = '#,##0', K2 = '#,##0.00', P0 = '0%', P1 = '0.0%';
+  const status = s => ({ ok: 'OK', flagged: 'Flagged', not_in_operation: 'Not in operation', low_utilisation: 'Low utilisation', estimated: 'Estimated' })[s] || s || '';
+  // Summary
+  let ws = sheet('Summary', [52, 18, 16, 30]);
+  title(ws, `Monthly Energy Report — ${ml}`, `Northern Region Cement Company, Turaif · Electrical Department · status: ${R.status}`);
+  head(ws, ['Headline', 'kWh/t', '', 'Status']);
+  line(ws, ['Gray cement', g('Summary!C38'), null, R.status_notes.gray ? 'Estimated — kiln stopped' : (g('Summary!C38') == null ? 'Not in operation' : 'OK')], [null, K2], true);
+  line(ws, ['White cement', g('Summary!J37'), null, R.status_notes.white ? 'Estimated — kiln stopped' : (g('Summary!J37') == null ? 'Not in operation' : 'OK')], [null, K2], true);
+  if (R.is_history) { line(ws, ['Old workbook reported — gray', R.legacy['Summary!C38']], [null, K2]); line(ws, ['Old workbook reported — white', R.legacy['Summary!J37']], [null, K2]); }
+  ws.addRow([]); head(ws, ['Energy balance', 'kWh', '% of generation', '']);
+  const gen = g('PP!C15') || 0;
+  [['Total generation (DG1–DG9)', gen, true], ['Sent out on power plant feeders', X.outgoing], ['Power plant internal difference', X.ppdiff], ['Plant process & utilities (metered)', X.plant, true],
+   ['Power plant auxiliaries', X.ppAux], ['Housing colony', X.housing], ['Water treatment station (non-plant)', X.wts], ['Metering mismatch Line I + II (out of KPIs)', X.mm1 + X.mm2]]
+    .forEach(([a, b, bo]) => line(ws, [a, b, gen ? b / gen : null], [null, K, P1], bo));
+  ws.addRow([]); head(ws, ['Checks', 'Count', '', '']);
+  line(ws, ['STOP (must be fixed before final)', R.checks.filter(c => c.sev === 'STOP').length]); line(ws, ['Warnings', R.checks.filter(c => c.sev === 'WARNING').length]);
+  // Line I / II
+  const procSheet = (name, rows) => { const w = sheet(name, [46, 16, 14, 12, 16, 14, 18]); title(w, `${name} — ${ml}`, 'kWh, tonnes and kWh per tonne; expected energy from the fixed yardstick (decision 29)');
+    head(w, ['Process', 'kWh', 'Tonnes', 'kWh/t', 'Expected kWh', 'Energy vs expected', 'Status']);
+    rows.forEach(r => r.band ? band(w, r.band, 7) : line(w, [r[0], r[1], r[2], r[3], r[4], r[5] == null ? null : 1 / r[5], status(r[6])], [null, K, K, K2, K, P0], r[7])); return w; };
+  const R1 = (c, label) => { const x = R.r1[c] || {}; return [label, x.kwh, x.tonnes, x.kwh_t, x.good_fit ? x.expected : null, x.good_fit ? x.perf : null, x.status]; };
+  const plain = (label, c, t, k, bold) => [label, g(c), t == null ? null : g(t), g(k), null, null, g(k) == null ? 'not_in_operation' : 'ok', bold];
+  ws = procSheet('Line I', [{ band: 'Clinker line' }, R1('LS1', 'Limestone crusher 1'), plain('Corrective crusher', 'Summary!C7', 'Summary!D7', 'Summary!E7'), R1('RM1', 'Raw mill 1'), R1('K1', 'Kiln 1'),
+    plain('Clinker line I', 'Summary!C10', 'Summary!D9', 'Summary!E10', true), plain('Utilities — clinker share', 'Summary!C11', null, 'Summary!E11'), plain('Clinker incl. utilities', 'Summary!C12', 'Summary!D9', 'Summary!E12', true),
+    { band: 'Cement' }, plain('Additive crusher', 'Summary!C14', 'Summary!D14', 'Summary!E14'), R1('CM1', 'Cement mill 1 (all products)'), R1('CM2', 'Cement mill 2 (all products)'),
+    plain('White cement — mills + roller press', 'Summary!C17', 'Summary!D15', 'Summary!E17'), plain('Gray cement — mills + roller press', 'Summary!C20', 'Summary!D18', 'Summary!E20'),
+    plain('Utilities — gray cement share', 'Summary!C23', 'Summary!D18', 'Summary!E23'), plain('Packing plant', 'Summary!C26', 'Summary!D21', 'Summary!E26')]);
+  ws.addRow([]); head(ws, ['Gray cement headline', 'Value', '', '', '', '', '']);
+  [['Clinker per t gray cement (t/t)', g('Summary!C30'), '0.000'], ['Clinker part (kWh/t)', g('Summary!C33'), K2], ['Grinding incl. utilities (kWh/t)', g('Summary!C35'), K2], ['Packing (kWh/t)', g('Summary!C36'), K2], ['Gray cement (kWh/t)', g('Summary!C38'), K2]]
+    .forEach(([a, b, f], i) => line(ws, [a, b], [null, f], i === 4));
+  ws = procSheet('Line II', [R1('LS2', 'Limestone crusher 2'), R1('RM2', 'Raw mill 2 (incl. substation remainder)'), R1('K2', 'Kiln 2'),
+    plain('Clinker line II', 'Summary!K10', 'Summary!L9', 'Summary!M10', true), plain('Utilities Line II', 'Summary!K11', 'Summary!L9', 'Summary!M11'), plain('Clinker II incl. utilities', 'Summary!K12', 'Summary!L9', 'Summary!M12', true)]);
+  ws.addRow([]); head(ws, ['White cement headline', 'Value', '', '', '', '', '']);
+  [['Clinker per t white cement (t/t)', g('Summary!J29'), '0.000'], ['Clinker part (kWh/t)', g('Summary!J32'), K2], ['Grinding incl. utilities (kWh/t)', g('Summary!J34'), K2], ['Packing (kWh/t)', g('Summary!J35'), K2], ['White cement (kWh/t)', g('Summary!J37'), K2]]
+    .forEach(([a, b, f], i) => line(ws, [a, b], [null, f], i === 4));
+  // Power plant
+  ws = sheet('Power plant', [12, 34, 16, 14, 16, 12]); title(ws, `Power plant & energy balance — ${ml}`, 'PIC Power Generation & Consumption; plant incomers for the feeder check');
+  head(ws, ['Unit', 'Meter', 'kWh', 'Share', '', '']); R.dg.forEach(d => line(ws, [d.code, d.name, d.kwh, gen ? (d.kwh || 0) / gen : null], [null, null, K, P1]));
+  line(ws, ['Total', 'Generation', gen, 1], [null, null, K, P0], true); ws.addRow([]);
+  head(ws, ['Feeder', 'Supplies', 'PP side kWh', 'Plant incomer', 'Plant side kWh', 'Difference']);
+  R.feeders.forEach(f => line(ws, [f.code, f.name, f.kwh, f.plant || '', f.plant_kwh, f.plant_kwh != null && f.kwh ? (f.plant_kwh - f.kwh) / f.kwh : null], [null, null, K, null, K, P1]));
+  ws.addRow([]); head(ws, ['Balance item', '', 'kWh', '', '', '']);
+  [['Power plant internal difference', X.ppdiff], ['Raw mill 2 substation remainder (E1A)', g('E1A_substation_remainder')], ['Cement mill substation remainder (E14)', g('E14_substation_remainder')],
+   ['Metering mismatch Line I', X.mm1], ['Metering mismatch Line II', X.mm2], [`Running total ${R.run12.months} months — Line I`, R.run12.l1], [`Running total ${R.run12.months} months — Line II`, R.run12.l2]]
+    .forEach(([a, b]) => { const r = line(ws, [a, '', b], [null, null, K]); ws.mergeCells(r.number, 1, r.number, 2); });
+  // Checks
+  ws = sheet('Checks', [12, 10, 110]); title(ws, `Checks — ${ml}`, 'STOP = fix before final · Warning = published flagged · Note = information');
+  head(ws, ['Severity', 'Check', 'Finding']); R.checks.forEach(c => { const r = line(ws, [c.sev, c.id, c.msg], []); r.getCell(3).alignment = { wrapText: true };
+    r.getCell(1).font = { bold: true, color: { argb: c.sev === 'STOP' ? 'FFB42318' : c.sev === 'WARNING' ? 'FFB54708' : 'FF175CD3' } }; });
+  // Trend
+  ws = sheet('Trend 12 months', [14, 14, 14, 18, 18]); title(ws, 'Headline trend', '* estimated — kiln stopped');
+  head(ws, ['Month', 'Gray kWh/t', 'White kWh/t', 'Mismatch L1 kWh', 'Mismatch L2 kWh']);
+  R.trend.forEach(t => line(ws, [monthLabel(t.m) + (t.gray_est ? ' *' : ''), t.gray, t.white, t.l1mm, t.l2mm], [null, K2, K2, K, K]));
+  // Rules
+  ws = sheet('Rules in force', [12, 52, 18, 18, 10, 70]); title(ws, `Rules in force for ${ml}`, 'Every split, fixed value, threshold and yardstick (Rules table)');
+  head(ws, ['Rule', 'Name', 'Setting', 'Value', 'From', 'Reason']); R.rules_in_force.forEach(x => { const r = line(ws, [x.rule, x.name, x.setting, x.value, x.valid_from, x.reason], []); r.getCell(6).alignment = { wrapText: true }; });
+  wb.eachSheet(w => { w.views = [{ state: 'frozen', ySplit: 3, showGridLines: false }]; });
+  const buf = await wb.xlsx.writeBuffer();
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+  a.download = `NRCC Energy Report ${R.month}.xlsx`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast('Excel report downloaded');
+}
+
+// ================= TRENDS (configurable) =================
+const IND = [
+  ['Headline KPIs', [['Summary!C38', 'Gray cement', 'kWh/t'], ['Summary!J37', 'White cement', 'kWh/t'], ['old:Summary!C38', 'Gray — old workbook reported', 'kWh/t'], ['old:Summary!J37', 'White — old workbook reported', 'kWh/t'],
+    ['Summary!E12', 'Clinker I incl. utilities', 'kWh/t'], ['Summary!M12', 'Clinker II incl. utilities', 'kWh/t']]],
+  ['Line I — kWh per tonne', [['Summary!E6', 'Limestone crusher 1', 'kWh/t'], ['Summary!E7', 'Corrective crusher', 'kWh/t'], ['Summary!E8', 'Raw mill 1', 'kWh/t'], ['Summary!E9', 'Kiln 1', 'kWh/t'],
+    ['Summary!E10', 'Clinker line I', 'kWh/t'], ['Summary!E14', 'Additive crusher', 'kWh/t'], ['Summary!E17', 'White cement grinding', 'kWh/t'], ['Summary!E20', 'Gray cement grinding', 'kWh/t'],
+    ['Summary!E23', 'Cement utilities (gray share)', 'kWh/t'], ['Summary!E26', 'Packing plant', 'kWh/t']]],
+  ['Line II — kWh per tonne', [['Summary!M6', 'Limestone crusher 2', 'kWh/t'], ['Summary!M8', 'Raw mill 2', 'kWh/t'], ['Summary!M9', 'Kiln 2', 'kWh/t'], ['Summary!M10', 'Clinker line II', 'kWh/t'], ['Summary!M11', 'Utilities Line II', 'kWh/t']]],
+  ['Fair comparison (R1 yardstick)', ['LS1', 'RM1', 'K1', 'CM1', 'CM2', 'LS2', 'RM2', 'K2'].flatMap(c => [[`R1use:${c}`, `${{ LS1: 'LS crusher 1', RM1: 'Raw mill 1', K1: 'Kiln 1', CM1: 'Cement mill 1', CM2: 'Cement mill 2', LS2: 'LS crusher 2', RM2: 'Raw mill 2', K2: 'Kiln 2' }[c]} — energy vs expected`, '%'],
+    [`R1norm:${c}`, `${{ LS1: 'LS crusher 1', RM1: 'Raw mill 1', K1: 'Kiln 1', CM1: 'Cement mill 1', CM2: 'Cement mill 2', LS2: 'LS crusher 2', RM2: 'Raw mill 2', K2: 'Kiln 2' }[c]} — kWh/t at normal production`, 'kWh/t']])],
+  ['Energy — kWh', [['Summary!I24', 'Total generation', 'kWh'], ['PP!H22', 'Sent out on PP feeders', 'kWh'], ['calc:plant', 'Plant process & utilities', 'kWh'], ['calc:ppaux', 'Power plant auxiliaries', 'kWh'],
+    ['Summary!C40', 'Housing colony', 'kWh'], ['water_treatment_station', 'Water treatment station', 'kWh'], ['Summary!C10', 'Clinker line I', 'kWh'], ['Summary!K10', 'Clinker line II', 'kWh'],
+    ['Summary!C17', 'White cement grinding', 'kWh'], ['Summary!C20', 'Gray cement grinding', 'kWh'], ['Summary!C26', 'Packing plant', 'kWh'],
+    ['E1A_substation_remainder', 'E1A substation remainder', 'kWh'], ['E14_substation_remainder', 'E14 substation remainder', 'kWh']]],
+  ['Losses & metering', [['Consumption!D155', 'Metering mismatch Line I', 'kWh'], ['Summary!L23', 'Metering mismatch Line II', 'kWh'], ['calc:mm1pct', 'Metering mismatch Line I', '%'], ['calc:mm2pct', 'Metering mismatch Line II', '%'],
+    ['PP!H25', 'Power plant internal difference', 'kWh'], ['Summary!L25', 'Total error (PP diff + both mismatches)', '%']]],
+  ['Production — tonnes', [['P:ls1_t', 'LS crusher 1', 't'], ['P:ls2_t', 'LS crusher 2', 't'], ['P:rm1_t', 'Raw mill 1 raw meal', 't'], ['P:rm2_t', 'Raw mill 2 raw meal', 't'], ['P:kiln1_t', 'Kiln 1 clinker', 't'],
+    ['P:kiln2_t', 'Kiln 2 clinker', 't'], ['P:cm1_white_t', 'CM1 white cement', 't'], ['P:cm2_gray_t', 'CM2 gray cement', 't'], ['P:gray_dispatch_t', 'Gray dispatch', 't']]],
+  ['Running hours', [['P:ls1_h', 'LS crusher 1', 'h'], ['P:ls2_h', 'LS crusher 2', 'h'], ['P:rm1_h', 'Raw mill 1', 'h'], ['P:rm2_h', 'Raw mill 2', 'h'], ['P:kiln1_h', 'Kiln 1', 'h'], ['P:kiln2_h', 'Kiln 2', 'h'], ['P:cm1_h', 'Cement mill 1', 'h'], ['P:cm2_h', 'Cement mill 2', 'h']]],
+  ['Ratios', [['Summary!C30', 'Clinker per t gray cement', 't/t'], ['Summary!J29', 'Clinker per t white cement', 't/t']]]
+];
+const INDMAP = Object.fromEntries(IND.flatMap(([grp, list]) => list.map(([k, l, u]) => [k, { k, l, u, grp }])));
+const PRESETS = {
+  'Headline KPIs': { ind: ['Summary!C38', 'Summary!J37'] },
+  'Old vs new (transition)': { ind: ['Summary!C38', 'old:Summary!C38', 'Summary!J37', 'old:Summary!J37'] },
+  'Line I processes': { ind: ['Summary!E6', 'Summary!E8', 'Summary!E9', 'Summary!E17', 'Summary!E20'] },
+  'Line II processes': { ind: ['Summary!M6', 'Summary!M8', 'Summary!M9', 'Summary!M12'] },
+  'Fair comparison — energy vs expected': { ind: ['R1use:RM1', 'R1use:K1', 'R1use:RM2', 'R1use:K2', 'R1use:CM2'], ref100: true },
+  'Power plant & balance': { ind: ['Summary!I24', 'calc:plant', 'calc:ppaux', 'Summary!C40', 'water_treatment_station'], type: 'bar', stack: true },
+  'Metering mismatch': { ind: ['calc:mm1pct', 'calc:mm2pct'], type: 'bar', avg: true }
+};
+const COLORS = ['#157347', '#5925dc', '#d92d20', '#0086c9', '#dc6803', '#4e5ba6', '#099250', '#c11574', '#667085', '#b54708'];
+let TR = { data: null, chart: null };
+function trCfgFromHash() {
+  const p = new URLSearchParams((location.hash.split('?')[1]) || ''); const c = {};
+  if (p.get('ind')) c.ind = p.get('ind').split('~').filter(k => INDMAP[k]);
+  ['from', 'to', 'type', 'avg', 'roll', 'stack', 'ref100', 'table', 'labels', 'zero'].forEach(k => { if (p.has(k)) c[k] = p.get(k); });
+  return c;
+}
+function trSaveHash(c) {
+  const p = new URLSearchParams(); p.set('ind', c.ind.join('~')); p.set('from', c.from); p.set('to', c.to); p.set('type', c.type);
+  ['avg', 'roll', 'stack', 'ref100', 'table', 'labels', 'zero'].forEach(k => c[k] && p.set(k, '1'));
+  history.replaceState(null, '', '#trends?' + p.toString());
+}
+function trValue(row, k) {
+  if (k.startsWith('R1use:')) { const v = row['R1perf:' + k.slice(6)]; return v == null ? null : 100 / v; }
+  if (k === 'calc:ppaux') return row['Summary!C41'] == null ? null : (row['Summary!C41'] || 0) + (row['Summary!I14'] || 0);
+  if (k === 'calc:plant') { if (row['PP!H22'] == null) return null; return row['PP!H22'] - (row['Summary!C41'] || 0) - (row['Summary!I14'] || 0) - (row['Summary!C40'] || 0) - (row['water_treatment_station'] || 0) - (row['Consumption!D155'] || 0) - (row['Summary!L23'] || 0); }
+  if (k === 'calc:mm1pct') return row['PP!H13'] ? 100 * row['Consumption!D155'] / row['PP!H13'] : null;
+  if (k === 'calc:mm2pct') return row['PP!H20'] ? 100 * row['Summary!L23'] / row['PP!H20'] : null;
+  if (k === 'Summary!L25') return row[k];
+  const v = row[k]; return v == null ? null : Number(v);
+}
+async function trendsView() {
+  $('#title').textContent = 'Trends';
+  app.innerHTML = topNav('trends') + '<div class="card">Loading…</div>';
+  const months = await q(sb.from('month').select('month_key').order('month_key'));
+  const keys = months.map(m => m.month_key);
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem('nrcc_trend_presets') || '{}'); } catch (e) { }
+  const def = { ind: ['Summary!C38', 'Summary!J37'], from: keys[0], to: keys[keys.length - 1], type: 'line' };
+  const c = Object.assign({}, def, trCfgFromHash());
+  ['avg', 'roll', 'stack', 'ref100', 'table', 'labels', 'zero'].forEach(k => c[k] = c[k] === '1' || c[k] === true);
+  if (!trCfgFromHash().ind) c.table = true;
+  app.innerHTML = topNav('trends') + `
+  <div class="card"><div class="tbar"><h2 class="grow" style="margin:0">Trends</h2>
+    <select id="preset" style="width:auto"><option value="">Presets…</option>${Object.keys(PRESETS).map(p => `<option>${p}</option>`).join('')}${Object.keys(saved).length ? `<optgroup label="My views">${Object.keys(saved).map(p => `<option value="my:${esc(p)}">${esc(p)}</option>`).join('')}</optgroup>` : ''}</select>
+    <button class="sec" id="saveView">Save view</button><button class="sec" id="trXls">Excel</button><button class="sec" id="trPng">Image</button></div>
+  <div class="tr-grid">
+    <div><input id="indSearch" placeholder="Search indicators…"><div class="picker" id="picker">${IND.map(([grp, list]) => `<h4>${grp}</h4>${list.map(([k, l, u]) => `<label data-s="${(grp + ' ' + l + ' ' + u).toLowerCase()}"><input type="checkbox" value="${k}" ${c.ind.includes(k) ? 'checked' : ''}><span>${esc(l)} <span class="muted">(${u})</span></span></label>`).join('')}`).join('')}</div>
+      <p class="muted">Up to 8 lines. Two different units are drawn on a left and a right axis.</p></div>
+    <div>
+      <div class="opts">
+        <div><label style="display:block">From</label><select id="tFrom">${keys.map(k => `<option value="${k}" ${k === c.from ? 'selected' : ''}>${monthLabel(k)}</option>`).join('')}</select></div>
+        <div><label style="display:block">To</label><select id="tTo">${keys.map(k => `<option value="${k}" ${k === c.to ? 'selected' : ''}>${monthLabel(k)}</option>`).join('')}</select></div>
+        <div><label style="display:block">Chart</label><select id="tType"><option value="line">Line</option><option value="bar">Bars</option><option value="area">Area</option></select></div>
+        <div><label style="display:block">Quick range</label><select id="tQuick"><option value="">—</option><option value="12">Last 12 months</option><option value="6">Last 6 months</option><option value="base">Baseline year Jul 2025–Jun 2026</option><option value="all">All months</option></select></div>
+      </div>
+      <div class="opts">
+        <label><input type="checkbox" id="oAvg" ${c.avg ? 'checked' : ''}> Average line</label>
+        <label><input type="checkbox" id="oRoll" ${c.roll ? 'checked' : ''}> 3-month rolling average</label>
+        <label><input type="checkbox" id="oStack" ${c.stack ? 'checked' : ''}> Stack bars</label>
+        <label><input type="checkbox" id="oRef" ${c.ref100 ? 'checked' : ''}> 100% reference line</label>
+        <label><input type="checkbox" id="oZero" ${c.zero ? 'checked' : ''}> Start axis at zero</label>
+        <label><input type="checkbox" id="oLab" ${c.labels ? 'checked' : ''}> Show values</label>
+        <label><input type="checkbox" id="oTab" ${c.table ? 'checked' : ''}> Table below</label>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="chartbox"><canvas id="trChart"></canvas></div>
+      <p class="muted" id="trNote"></p>
+      <div id="trTable"></div>
+    </div></div></div>`;
+  $('#tType').value = c.type;
+  const read = () => ({ ind: [...app.querySelectorAll('#picker input:checked')].map(i => i.value), from: $('#tFrom').value, to: $('#tTo').value, type: $('#tType').value,
+    avg: $('#oAvg').checked, roll: $('#oRoll').checked, stack: $('#oStack').checked, ref100: $('#oRef').checked, zero: $('#oZero').checked, labels: $('#oLab').checked, table: $('#oTab').checked });
+  const apply = (cfg) => {
+    app.querySelectorAll('#picker input').forEach(i => i.checked = cfg.ind.includes(i.value));
+    if (cfg.from) $('#tFrom').value = cfg.from; if (cfg.to) $('#tTo').value = cfg.to; if (cfg.type) $('#tType').value = cfg.type;
+    $('#oAvg').checked = !!cfg.avg; $('#oRoll').checked = !!cfg.roll; $('#oStack').checked = !!cfg.stack; $('#oRef').checked = !!cfg.ref100; $('#oZero').checked = !!cfg.zero; $('#oLab').checked = !!cfg.labels; $('#oTab').checked = cfg.table !== false;
+    draw();
+  };
+  app.querySelectorAll('#picker input').forEach(i => i.onchange = () => { if (app.querySelectorAll('#picker input:checked').length > 8) { i.checked = false; return toast('Up to 8 lines at a time'); } draw(); });
+  ['tFrom', 'tTo', 'tType', 'oAvg', 'oRoll', 'oStack', 'oRef', 'oZero', 'oLab', 'oTab'].forEach(id => $('#' + id).onchange = draw);
+  $('#indSearch').oninput = e => { const s = e.target.value.toLowerCase(); app.querySelectorAll('#picker label').forEach(l => l.style.display = l.dataset.s.includes(s) ? '' : 'none'); };
+  $('#tQuick').onchange = e => { const v = e.target.value; if (!v) return; const last = keys[keys.length - 1];
+    if (v === 'all') { $('#tFrom').value = keys[0]; $('#tTo').value = last; } else if (v === 'base') { $('#tFrom').value = '2025-07'; $('#tTo').value = '2026-06'; }
+    else { $('#tFrom').value = keys[Math.max(0, keys.length - Number(v))]; $('#tTo').value = last; } e.target.value = ''; draw(); };
+  $('#preset').onchange = e => { const v = e.target.value; if (!v) return; const p = v.startsWith('my:') ? saved[v.slice(3)] : Object.assign({ from: $('#tFrom').value, to: $('#tTo').value, type: 'line', table: true }, PRESETS[v]); apply(p); e.target.value = ''; };
+  $('#saveView').onclick = () => { const n = prompt('Name for this view'); if (!n) return; saved[n] = read(); localStorage.setItem('nrcc_trend_presets', JSON.stringify(saved)); toast(`Saved "${n}" — find it under Presets`); };
+  $('#trPng').onclick = () => { if (!TR.chart) return; const a = document.createElement('a'); a.href = TR.chart.toBase64Image('image/png', 1); a.download = 'NRCC energy trend.png'; a.click(); };
+  $('#trXls').onclick = () => trendExcel(read()).catch(e => toast(e.message || 'Export failed', 5000));
+  TR.data = await q(sb.schema('energy').rpc('trend_data', { p_from: keys[0], p_to: keys[keys.length - 1] }));
+  await loadScript(CHART_JS);
+  draw();
+
+  function draw() {
+    const cfg = read(); trSaveHash(cfg);
+    let rows = TR.data.filter(r => r.m >= cfg.from && r.m <= cfg.to);
+    const labels = rows.map(r => monthLabel(r.m));
+    const units = [...new Set(cfg.ind.map(k => INDMAP[k].u))];
+    if (units.length > 2) toast('More than two units selected — the third unit shares the right axis', 3500);
+    const axisOf = u => units.indexOf(u) === 0 ? 'y' : 'y2';
+    const ds = [];
+    cfg.ind.forEach((k, i) => {
+      const meta = INDMAP[k], col = COLORS[i % COLORS.length], vals = rows.map(r => trValue(r, k));
+      const est = rows.map(r => (k === 'Summary!C38' && r['est:Summary!C38']) || (k === 'Summary!J37' && r['est:Summary!J37']));
+      const isOld = k.startsWith('old:');
+      ds.push({ label: `${meta.l} (${meta.u})`, data: vals, borderColor: col, backgroundColor: cfg.type === 'area' ? col + '33' : col + (cfg.type === 'bar' ? 'cc' : ''),
+        type: cfg.type === 'bar' ? 'bar' : 'line', fill: cfg.type === 'area', tension: .25, yAxisID: axisOf(meta.u), borderDash: isOld ? [6, 4] : undefined,
+        pointStyle: est.map(e => e ? 'triangle' : 'circle'), pointRadius: est.map(e => e ? 7 : 3), spanGaps: false, stack: cfg.stack ? axisOf(meta.u) : undefined });
+      if (cfg.roll) ds.push({ label: `${meta.l} — 3-month avg`, data: vals.map((v, j) => { const w = vals.slice(Math.max(0, j - 2), j + 1).filter(x => x != null); return w.length === 3 ? w.reduce((a, b) => a + b) / 3 : null; }),
+        borderColor: col, borderWidth: 3, pointRadius: 0, borderDash: [2, 3], type: 'line', fill: false, yAxisID: axisOf(meta.u), tension: .3 });
+      if (cfg.avg) { const ok = vals.filter(v => v != null); const a = ok.length ? ok.reduce((x, y) => x + y) / ok.length : null;
+        ds.push({ label: `${meta.l} — average ${a == null ? '' : fmt(a, meta.u === 'kWh' || meta.u === 't' ? 0 : 1)}`, data: vals.map(() => a), borderColor: col, borderWidth: 1, borderDash: [8, 5], pointRadius: 0, type: 'line', fill: false, yAxisID: axisOf(meta.u) }); }
+    });
+    if (cfg.ref100) ds.push({ label: 'Expected (100%)', data: rows.map(() => 100), borderColor: '#98a2b3', borderWidth: 1.5, borderDash: [4, 4], pointRadius: 0, type: 'line', fill: false, yAxisID: units[0] === '%' ? 'y' : 'y2' });
+    $('#chips').innerHTML = cfg.ind.map((k, i) => `<span class="chip" style="background:${COLORS[i % COLORS.length]}">${esc(INDMAP[k].l)}</span>`).join('');
+    if (TR.chart) TR.chart.destroy();
+    const valLabels = { id: 'vl', afterDatasetsDraw(ch) { if (!cfg.labels) return; const cx = ch.ctx; cx.save(); cx.font = '10px system-ui'; cx.fillStyle = '#344054'; cx.textAlign = 'center';
+      ch.data.datasets.forEach((d, di) => { if (d.pointRadius === 0) return; ch.getDatasetMeta(di).data.forEach((p, j) => { const v = d.data[j]; if (v == null) return; cx.fillText(Math.abs(v) >= 1000 ? Math.round(v).toLocaleString('en-US') : Number(v).toFixed(1), p.x, p.y - 6); }); }); cx.restore(); } };
+    TR.chart = new Chart($('#trChart'), { type: cfg.type === 'bar' ? 'bar' : 'line', data: { labels, datasets: ds }, plugins: [valLabels],
+      options: { maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 14 } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y == null ? '—' : Number(ctx.parsed.y).toLocaleString('en-US', { maximumFractionDigits: 2 })}` } } },
+        scales: { x: { stacked: cfg.stack }, y: { stacked: cfg.stack, beginAtZero: cfg.zero, title: { display: !!units[0], text: units[0] || '' } },
+          y2: { display: units.length > 1, position: 'right', stacked: cfg.stack, beginAtZero: cfg.zero, grid: { drawOnChartArea: false }, title: { display: units.length > 1, text: units.slice(1).join(' / ') } } } } });
+    const notes = [];
+    if (cfg.ind.some(k => k === 'Summary!C38' || k === 'Summary!J37')) notes.push('▲ = estimated (kiln stopped, cement from stock clinker).');
+    if (cfg.ind.some(k => k.startsWith('R1'))) notes.push('Energy vs expected: 100% = the energy the fixed yardstick (Jul 2025–Jun 2026) expects at that month\'s production; above 100% = more energy than normal. Cement mill 1 and LS crusher 2 yardsticks fit weakly and are left blank.');
+    if (cfg.ind.some(k => k.startsWith('old:'))) notes.push('Dashed = figure the old workbook reported (partly hand-typed).');
+    notes.push('Gaps = not in operation or no data.');
+    $('#trNote').textContent = notes.join(' ');
+    $('#trTable').innerHTML = cfg.table && cfg.ind.length ? `<div style="overflow-x:auto"><table class="t"><thead><tr><th>Indicator</th>${labels.map(l => `<th class="n">${l.replace(' 20', ' ')}</th>`).join('')}<th class="n">Min</th><th class="n">Avg</th><th class="n">Max</th></tr></thead><tbody>
+      ${cfg.ind.map(k => { const m = INDMAP[k], v = rows.map(r => trValue(r, k)), ok = v.filter(x => x != null), d = ['kWh', 't'].includes(m.u) ? 0 : m.u === 't/t' ? 3 : 1;
+        return `<tr><td>${esc(m.l)} <span class="muted">${m.u}</span></td>${v.map(x => `<td class="n">${x == null ? '—' : fmt(x, d)}</td>`).join('')}<td class="n">${ok.length ? fmt(Math.min(...ok), d) : ''}</td><td class="n">${ok.length ? fmt(ok.reduce((a, b) => a + b) / ok.length, d) : ''}</td><td class="n">${ok.length ? fmt(Math.max(...ok), d) : ''}</td></tr>`; }).join('')}</tbody></table></div>` : '';
+  }
+}
+async function trendExcel(cfg) {
+  await loadScript(EXCEL_JS);
+  const rows = TR.data.filter(r => r.m >= cfg.from && r.m <= cfg.to);
+  const wb = new ExcelJS.Workbook(); const ws = wb.addWorksheet('Trend', { views: [{ state: 'frozen', xSplit: 2, ySplit: 3, showGridLines: false }] });
+  ws.addRow([`NRCC energy trend — ${monthLabel(cfg.from)} to ${monthLabel(cfg.to)}`]).font = { bold: true, size: 14, color: { argb: 'FF0F5132' } };
+  ws.addRow(['Calculated by the NRCC Energy app; gaps = not in operation or no data']).font = { italic: true, color: { argb: 'FF667085' } };
+  const h = ws.addRow(['Indicator', 'Unit', ...rows.map(r => monthLabel(r.m)), 'Min', 'Average', 'Max']);
+  h.eachCell(c => { c.font = { bold: true, color: { argb: 'FFFFFFFF' } }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0F5132' } }; });
+  cfg.ind.forEach(k => { const m = INDMAP[k], v = rows.map(r => trValue(r, k)), ok = v.filter(x => x != null);
+    const r = ws.addRow([m.l, m.u, ...v, ok.length ? Math.min(...ok) : null, ok.length ? ok.reduce((a, b) => a + b) / ok.length : null, ok.length ? Math.max(...ok) : null]);
+    const f = ['kWh', 't'].includes(m.u) ? '#,##0' : m.u === 't/t' ? '0.000' : '#,##0.0'; for (let i = 3; i <= v.length + 5; i++) r.getCell(i).numFmt = f; });
+  ws.getColumn(1).width = 44; ws.getColumn(2).width = 8; for (let i = 3; i <= rows.length + 5; i++) ws.getColumn(i).width = 12;
+  const buf = await wb.xlsx.writeBuffer(); const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })); a.download = `NRCC energy trend ${cfg.from} to ${cfg.to}.xlsx`; a.click();
+}
+
+// ================= RULES =================
+async function rulesView() {
+  $('#title').textContent = 'Rules';
+  app.innerHTML = topNav('rules') + '<div class="card">Loading…</div>';
+  const rules = await q(sb.from('rule').select('*').order('rule_id').order('setting').order('valid_from'));
+  const open = await q(sb.from('month').select('month_key').neq('status', 'final').order('month_key'));
+  const groups = [['Allocation & method rules', r => /^(A|S|P1|K|DC1)/.test(r.rule_id)], ['Checks & thresholds', r => /^X/.test(r.rule_id)],
+    ['Own normals (learned from Jul 2025 – Jun 2026)', r => /^N_/.test(r.rule_id)], ['Production yardsticks (R1)', r => /^R1\./.test(r.rule_id)]];
+  const by = {}; rules.filter(r => r.profile !== 'legacy').forEach(r => (by[r.rule_id + '|' + r.setting] ??= []).push(r));
+  const isAdmin = state.role === 'admin';
+  app.innerHTML = topNav('rules') + `<div class="card"><h2>Rules table</h2>
+    <p class="muted">Every split, fixed value, threshold and yardstick lives here and nowhere else (decision 15). A change is a new line that starts from a month; earlier lines are kept, and final months never move.</p>
+    <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" id="showLegacy" style="width:auto"> Also show legacy-mode settings (used only for the proof against the old workbook)</label>
+    ${groups.map(([t, f]) => { const keys = Object.keys(by).filter(k => f(by[k][0])); if (!keys.length) return '';
+      return `<h3>${t}</h3>` + keys.map(k => { const L = by[k], cur = L[L.length - 1];
+        return `<details class="rule"><summary><span><b>${esc(cur.name)}</b> <span class="muted">${cur.rule_id} · ${cur.setting}</span></span><span class="val">${esc(cur.value)}</span></summary>
+          <table class="t"><thead><tr><th>From</th><th>Value</th><th>Reason</th><th>Added</th></tr></thead><tbody>${L.map(r => `<tr><td>${r.valid_from}</td><td><b>${esc(r.value)}</b></td><td>${esc(r.reason || '')}</td><td class="muted">${new Date(r.created_at).toLocaleDateString('en-GB')}</td></tr>`).join('')}</tbody></table>
+          ${isAdmin && open.length ? `<div class="grid2 noprint"><div><label>New value</label><input data-nv="${k}"></div><div><label>From month</label><select data-nf="${k}">${open.map(o => `<option>${o.month_key}</option>`).join('')}</select></div></div>
+          <label>Reason</label><input data-nr="${k}"><div class="actions"><button class="sec" data-add="${k}">Add new value</button></div>` : ''}</details>`; }).join(''); }).join('')}
+    <div id="legacyBox" hidden><h3>Legacy-mode settings</h3><table class="t"><thead><tr><th>Rule</th><th>Setting</th><th>Value</th><th>Reason</th></tr></thead><tbody>
+      ${rules.filter(r => r.profile === 'legacy').map(r => `<tr><td>${r.rule_id}</td><td>${r.setting}</td><td>${esc(r.value)}</td><td>${esc(r.reason || '')}</td></tr>`).join('')}</tbody></table></div>
+    ${!open.length ? '<p class="muted">Start the next month to be able to change a rule from that month on.</p>' : ''}</div>`;
+  $('#showLegacy').onchange = e => $('#legacyBox').hidden = !e.target.checked;
+  app.querySelectorAll('[data-add]').forEach(b => b.onclick = async () => {
+    const k = b.dataset.add, [rid, set] = k.split('|');
+    const v = app.querySelector(`[data-nv="${k}"]`).value.trim(), f = app.querySelector(`[data-nf="${k}"]`).value, r = app.querySelector(`[data-nr="${k}"]`).value.trim();
+    if (!v || !r) return toast('Give the new value and a reason');
+    if (!confirm(`Change ${rid}.${set} to "${v}" from ${monthLabel(f)} on?`)) return;
+    await q(sb.schema('energy').rpc('add_rule_value', { p_rule: rid, p_setting: set, p_value: v, p_valid_from: f, p_reason: r }));
+    toast('Rule changed — recalculate the open month (Run checks) to apply it'); rulesView();
+  });
+}
+
+// ================= HISTORY =================
+async function historyView() {
+  $('#title').textContent = 'History';
+  app.innerHTML = topNav('history') + '<div class="card">Loading…</div>';
+  const [months, log, corr, rules, users] = await Promise.all([
+    q(sb.from('month').select('*').order('month_key', { ascending: false })),
+    q(sb.from('change_log').select('*').order('at', { ascending: false }).limit(300)),
+    q(sb.from('correction').select('*').order('month_key')),
+    q(sb.from('rule').select('*').neq('profile', 'legacy').order('created_at', { ascending: false })),
+    q(sb.from('app_user').select('user_id,full_name'))]);
+  const who = id => users.find(u => u.user_id === id)?.full_name || (id ? 'user' : '—');
+  const firstLoad = rules.length ? rules[rules.length - 1].created_at.slice(0, 10) : '';
+  const changedRules = rules.filter(r => r.valid_from > '2025-07');
+  app.innerHTML = topNav('history') + `
+  <div class="card"><h2>Month status</h2><table class="t"><thead><tr><th>Month</th><th>Status</th><th>Final on</th><th>By</th><th>Note</th></tr></thead><tbody>
+    ${months.map(m => `<tr><td>${monthLabel(m.month_key)}</td><td><span class="pill p-${m.status}">${m.status}</span></td><td>${m.finalised_at ? new Date(m.finalised_at).toLocaleString('en-GB') : ''}</td><td>${who(m.finalised_by)}</td><td class="muted">${esc(m.note || '')}</td></tr>`).join('')}</tbody></table></div>
+  <div class="card"><h2>Changes to final months</h2>${log.length ? `<table class="t"><thead><tr><th>When</th><th>Who</th><th>Month</th><th>What</th><th>Old → new</th><th>Reason</th></tr></thead><tbody>
+    ${log.map(l => `<tr><td>${new Date(l.at).toLocaleString('en-GB')}</td><td>${who(l.user_id)}</td><td>${l.month_key || ''}</td><td>${esc(l.tbl)}</td>
+      <td class="muted" style="font-size:11px">${esc(JSON.stringify(l.old_value?.closing ?? l.old_value?.value ?? l.old_value ?? ''))} → ${esc(JSON.stringify(l.new_value?.closing ?? l.new_value?.value ?? l.new_value ?? ''))}</td><td>${esc(l.reason || '')}</td></tr>`).join('')}</tbody></table>`
+    : '<p class="muted">No change has been made to a final month.</p>'}</div>
+  <div class="card"><h2>Rule changes</h2>${changedRules.length ? `<table class="t"><thead><tr><th>From</th><th>Rule</th><th>New value</th><th>Reason</th><th>Added</th></tr></thead><tbody>
+    ${changedRules.map(r => `<tr><td>${r.valid_from}</td><td>${esc(r.name)} <span class="muted">${r.rule_id}.${r.setting}</span></td><td><b>${esc(r.value)}</b></td><td>${esc(r.reason || '')}</td><td class="muted">${new Date(r.created_at).toLocaleDateString('en-GB')}</td></tr>`).join('')}</tbody></table>`
+    : `<p class="muted">No rule changed since the system was set up${firstLoad ? ' on ' + new Date(firstLoad).toLocaleDateString('en-GB') : ''}.</p>`}</div>
+  <div class="card"><h2>Recorded input corrections</h2><table class="t"><thead><tr><th>Month</th><th>Meter / item</th><th>Field</th><th class="n">Value</th><th>Reason</th></tr></thead><tbody>
+    ${corr.map(c => `<tr><td>${monthLabel(c.month_key)}</td><td>${c.target}</td><td>${c.field}</td><td class="n">${fmt(c.value)}</td><td>${esc(c.reason)}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
 boot();
