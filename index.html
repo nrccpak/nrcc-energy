@@ -67,6 +67,7 @@ table.t tr.head td{font-weight:700;background:#eef4f0;color:var(--brand)}
 .st-ok{background:var(--okbg);color:var(--ok)}.st-flagged{background:var(--warnbg);color:var(--warn)}.st-not_in_operation{background:#f2f4f7;color:#475467}
 .st-low_utilisation{background:var(--infobg);color:var(--info)}.st-estimated{background:#f4f3ff;color:#5925dc}.st-out_of_service{background:#f2f4f7;color:#475467}
 .foot{font-size:11px;color:var(--mute);margin-top:18px;border-top:1px solid var(--line);padding-top:8px}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .tbar .grow{flex:1}
 /* trends */
@@ -584,6 +585,7 @@ async function reportTab() {
     ${R.is_history ? `<p class="muted">History month: inputs from the old workbook, recalculated with the agreed rules. Old workbook reported gray ${fmt(L['Summary!C38'], 1)} and white ${fmt(L['Summary!J37'], 1)} kWh/t; see the transition note (Trends → "Old vs new").</p>` : ''}
     <div class="foot">Every figure is calculated on the server from the recorded readings, production and the Rules table — nothing typed. Readings: plant ${R.plant_read_at ? new Date(R.plant_read_at).toLocaleString('en-GB') : '—'} · power plant ${R.pp_read_at ? new Date(R.pp_read_at).toLocaleString('en-GB') : '—'} · generated ${new Date().toLocaleString('en-GB')}.</div>
   </div>`;
+  document.querySelectorAll('#report table.t').forEach(t => { const d = document.createElement('div'); d.className = 'tscroll'; t.replaceWith(d); d.appendChild(t); });
   $('#btnPdf').onclick = () => window.print();
   $('#btnXls').onclick = () => exportReportExcel(R, { plant, ppAux, housing, wts, mm1, mm2, ppdiff, outgoing, l1Out, l2Out }).catch(e => toast(e.message || 'Excel export failed', 5000));
   try {
