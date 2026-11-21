@@ -71,7 +71,8 @@ table.t tr.head td{font-weight:700;background:#eef4f0;color:var(--brand)}
 .tbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .tbar .grow{flex:1}
 /* trends */
-.tr-grid{display:grid;grid-template-columns:300px 1fr;gap:12px}
+.tr-grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:12px}
+.tr-grid>div{min-width:0}
 .picker{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px 8px}
 .picker h4{margin:10px 0 4px;font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
 .picker label{display:flex;gap:8px;align-items:flex-start;margin:0;padding:4px 2px;font-size:13px;color:var(--ink);cursor:pointer}
@@ -94,7 +95,7 @@ details.rule summary .val{font-weight:700;font-variant-numeric:tabular-nums}
   table.t{font-size:10px} .pb{break-before:page} tr{break-inside:avoid}
   @page{size:A4;margin:14mm 12mm}
 }
-@media (max-width:820px){.tr-grid{grid-template-columns:1fr}.picker{max-height:260px}}
+@media (max-width:820px){.tr-grid{grid-template-columns:minmax(0,1fr)}.picker{max-height:260px}}
 @media (max-width:640px){
   .row{grid-template-columns:1fr 1fr;row-gap:6px}
   .row .who{grid-column:1/3}
